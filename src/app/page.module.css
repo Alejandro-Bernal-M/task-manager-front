@@ -1,0 +1,18 @@
+.homeDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-image: url('../assets/images/stacked-steps-haikei.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.mainTitle {
+    font-size: 4rem;
+    text-align: center;
+    color: var(--color-1);
+    padding-bottom: 2rem;
+    text-shadow: 4px 3px 2px #000;
+}

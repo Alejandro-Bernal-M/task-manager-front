@@ -1,11 +1,9 @@
-'use client'
-import { useStateContext } from "@/context/StateContext"
+import styles from './page.module.css'
 
 export default function Home() {
-  const { user } = useStateContext();
   return (
-      <div>
-          <h1>Welcome to task manager. {user.name}</h1>
+      <div className={styles.homeDiv}>
+          <h1 className={styles.mainTitle}>Welcome to task manager.</h1>
       </div>
   )
 }

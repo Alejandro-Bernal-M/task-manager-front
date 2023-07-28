@@ -19,3 +19,20 @@ h1,
 h2 {
   font-weight: 700;
 }
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+  
+::-webkit-scrollbar-track {
+  background-color: var(--color-4); 
+}
+  
+::-webkit-scrollbar-thumb {
+  background: var(--color-2); 
+  border-radius: 10px;
+  height: 20px;
+  cursor: pointer;
+  outline: 1px solid slategray;
+}
+  
