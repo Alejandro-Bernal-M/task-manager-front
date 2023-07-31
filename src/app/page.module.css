@@ -14,5 +14,5 @@
     text-align: center;
     color: var(--color-1);
     padding-bottom: 2rem;
-    text-shadow: 4px 3px 2px #000;
+    text-shadow: 4px 3px 2px var(--color-5);
 }

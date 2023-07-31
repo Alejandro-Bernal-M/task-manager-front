@@ -1,6 +1,6 @@
 import './globals.css'
 import { StateContext } from '@/context/StateContext'
-import Navigation from '@/components/navigation'
+import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 export const metadata = {
