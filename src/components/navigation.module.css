@@ -11,6 +11,7 @@
   color: var(--color-3);
   text-shadow: 1px 1px 1px #000;
   font-size: 1.5rem;
+  border-bottom: 1px solid var(--color-5);
 }
 
 .navbar ul {

@@ -5,7 +5,6 @@ const Tasks = () => {
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (
         <div className={styles.container}>
-            <h1>Tasks</h1>
             <div className={styles.tasksContainer}>
               {statuses.map((status, index) => (
                 <StatusColumn key={index} title={status} />
