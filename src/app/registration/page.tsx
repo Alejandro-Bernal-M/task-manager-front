@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
 import api from "@/utils/common";
+import styles from './registration.module.css'
 
 export default function Registration() {
     const handleSubmit = async (e: React.MouseEvent) => {
@@ -27,7 +28,7 @@ export default function Registration() {
   }
 
     return (
-        <div>
+        <div className={styles.container}>
             <h1>Registration</h1>
             <form>
               <input type="text" placeholder="email" id="email"  required/>
