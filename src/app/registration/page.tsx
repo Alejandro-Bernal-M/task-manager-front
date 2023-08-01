@@ -2,8 +2,14 @@
 import React from "react";
 import api from "@/utils/common";
 import styles from './registration.module.css'
+import { useRouter } from 'next/navigation'
+import { useStateContext } from '@/context/StateContext';
 
 export default function Registration() {
+  const { loggedIn, setLoggedIn } = useStateContext();
+  console.log(loggedIn);
+  const router = useRouter();
+  if(loggedIn) router.push('/tasks')
     const handleSubmit = async (e: React.MouseEvent) => {
       e.preventDefault();
       const emailInput = document.getElementById('email') as HTMLInputElement;
@@ -20,7 +26,9 @@ export default function Registration() {
         });
         const data = await response.json();
         if (data.status == 'Sucess') {
-          console.log(data.token);
+          localStorage.setItem('token',JSON.stringify(data.token));
+          setLoggedIn(true);
+          router.push('/tasks');
         }
       } catch (error) {
       console.log(error);

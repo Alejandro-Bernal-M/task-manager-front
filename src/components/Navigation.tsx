@@ -5,7 +5,11 @@ import { useStateContext } from '@/context/StateContext'
 import Link from 'next/link'
 
 const Navigation = () => {
-const { loggedIn } = useStateContext();
+const { loggedIn, setLoggedIn } = useStateContext();
+const handleSignOut = () => {
+  localStorage.removeItem('token');
+  setLoggedIn(false);
+};
   return (
     <nav className={styles.navbar}>
       <p>Task Manager</p>
@@ -19,7 +23,7 @@ const { loggedIn } = useStateContext();
           <li>Task</li>
           <li>Groups</li>
           <li>Profile</li>
-          <li>Sign Out</li>
+          <li><button onClick={handleSignOut}>Sign Out</button></li>
           </ul>
         }
     </nav>
