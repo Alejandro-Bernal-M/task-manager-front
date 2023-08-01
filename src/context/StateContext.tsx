@@ -13,6 +13,8 @@ type ContextType = {
   setUser: (user: User) => void;
   tasks: string[]
   setTasks: (tasks: string[]) => void; 
+  loggedIn: boolean;
+  setLoggedIn: (loggedIn: boolean) => void;
 };
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
@@ -21,6 +23,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     email: 'test@test.com'
   });
   const [tasks, setTasks] = useState<string[]>([]);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   return (
     <context.Provider
@@ -28,7 +31,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         user,
         setUser,
         tasks,
-        setTasks
+        setTasks,
+        loggedIn,
+        setLoggedIn
         }}>
         {children}
     </context.Provider>
