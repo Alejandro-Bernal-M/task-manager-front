@@ -12,7 +12,7 @@ const handleSignOut = () => {
 };
   return (
     <nav className={styles.navbar}>
-      <p>Task Manager</p>
+      <p><Link href='/'>Task Manager</Link></p>
       {!loggedIn && 
         <ul>
           <li><Link href='/registration'>Sign In</Link></li>

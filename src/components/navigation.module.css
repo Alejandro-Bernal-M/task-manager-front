@@ -23,3 +23,11 @@
   list-style: none;
   font-weight: 400;
 }
+
+.navbar ul li a,
+.navbar p a {
+  text-decoration: none;
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1.5rem;
+}
