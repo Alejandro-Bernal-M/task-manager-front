@@ -5,6 +5,7 @@ import styles from './registration.module.css'
 import { useRouter } from 'next/navigation'
 import { useStateContext } from '@/context/StateContext';
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Registration() {
   const { loggedIn, setLoggedIn } = useStateContext();
@@ -18,7 +19,7 @@ export default function Registration() {
       const email = emailInput.value;
       const passwordInput = document.getElementById('password') as HTMLInputElement;
       const password = passwordInput.value;
-      if(email == '' || password == '') return alert('Please fill all the fields')
+      if(email == '' || password == '') return toast.error('Please fill all the fields')
       try {
         const response = await fetch(api.login, {
           method: 'POST',
@@ -28,10 +29,12 @@ export default function Registration() {
           body: JSON.stringify({ email, password }),
         });
         const data = await response.json();
+        if (data.status == 'Error') return toast.error(data.message);
         if (data.status == 'Sucess') {
           localStorage.setItem('token',JSON.stringify(data.token));
           setLoggedIn(true);
           router.push('/tasks');
+          toast.success('Logged in successfully');
         }
       } catch (error) {
       console.log(error);
@@ -50,7 +53,7 @@ export default function Registration() {
     const confirmPassword = confirmPasswordInput.value;
     if(name == '' || email == '' || password == '' || confirmPassword == '') return alert('Please fill all the fields')
     if(password !== confirmPassword) {
-      alert('passwords do not match');
+      toast.error('passwords do not match');
       return;
     }
     try {
@@ -73,6 +76,7 @@ export default function Registration() {
           });
           const data = await response.json();
           if (data.status == 'Sucess') {
+            toast.success('Logged in successfully');
             localStorage.setItem('token',JSON.stringify(data.token));
             setLoggedIn(true);
             router.push('/tasks');
@@ -81,7 +85,7 @@ export default function Registration() {
         console.log(error);
       }
     } else {
-      alert(data.message);
+      toast.error(data.message);
     }
     } catch (error) {
       console.log(error);

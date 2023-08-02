@@ -2,6 +2,7 @@ import './globals.css'
 import { StateContext } from '@/context/StateContext'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { Toaster } from 'react-hot-toast'
 
 export const metadata = {
   title: 'Create Next App',
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StateContext>
+        <Toaster />
         <Navigation />
         <body>{children}</body>
         <Footer />

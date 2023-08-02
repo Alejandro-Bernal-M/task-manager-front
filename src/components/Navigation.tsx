@@ -3,12 +3,14 @@
 import styles from './navigation.module.css'
 import { useStateContext } from '@/context/StateContext'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 const Navigation = () => {
 const { loggedIn, setLoggedIn } = useStateContext();
 const handleSignOut = () => {
   localStorage.removeItem('token');
   setLoggedIn(false);
+  toast.success('Logged out successfully');
 };
   return (
     <nav className={styles.navbar}>
