@@ -1,9 +1,19 @@
-'use client'
+import { type } from 'os';
 import styles from './statusColumns.module.css'
+import { useStateContext } from '@/context/StateContext'
 
-const StatusColumn = ({ title }: {title:string}) => {
+type StatusColumnProps = {
+  title: string,
+  status: string,
+  setStatus: (status:string) => void
+}
+
+const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
+  const { setShowPopup } = useStateContext();
+
   const handleAddTask = () => {
-    console.log('add task');
+    setStatus(title);
+    setShowPopup(true);
   }
   return (
     <div className={styles.column}>
