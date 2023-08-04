@@ -1,6 +1,6 @@
 const api= {
-  login: 'http://127.0.0.1:4000/api/v1/login',
-  createUser: 'http://127.0.0.1:4000/api/v1/users'
+  login: `${process.env.NEXT_PUBLIC_API}/login`,
+  createUser: `${process.env.NEXT_PUBLIC_API}/users`,
 
 }
 
