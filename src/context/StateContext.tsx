@@ -12,14 +12,21 @@ interface User {
 type ContextType = {
   user: User;
   setUser: (user: User) => void;
-  tasks: string[]
-  setTasks: (tasks: string[]) => void; 
+  tasks: TaskType[];
+  setTasks: (tasks: TaskType[]) => void; 
   loggedIn: boolean;
   setLoggedIn: (loggedIn: boolean) => void;
   token: string;
   setToken: (token: string) => void;
   showPopup: boolean;
   setShowPopup: (showPopup: boolean) => void;
+};
+
+export type TaskType = {
+  title: string;
+  description: string;
+  status: string;
+  id: string;
 };
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
@@ -30,7 +37,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     name: 'John Doe',
     email: 'test@test.com'
   });
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<TaskType[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);

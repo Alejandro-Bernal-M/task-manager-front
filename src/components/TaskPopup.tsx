@@ -1,8 +1,36 @@
 import styles from './taskPopup.module.css'
+import React from 'react'
 import { useStateContext } from '@/context/StateContext'
+import { TaskType } from '@/context/StateContext'
+import { v4 as uuidv4 } from 'uuid';
 
-const TaskPopup = ({status}: {status:string}) => {
-  const { setShowPopup } = useStateContext();
+type TaskPopupProps = {
+  status: string,
+  setStatus: (status:string) => void
+}
+
+const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
+  const { setShowPopup, setTasks, tasks } = useStateContext();
+  const handleCreateTask = (e:React.MouseEvent) => {
+    e.preventDefault();
+    let myuuid = uuidv4();
+    console.log(myuuid)
+    const newTask: TaskType  = {
+      title: (document.getElementById('taskName') as HTMLInputElement).value,
+      description: (document.getElementById('taskDescription') as HTMLInputElement).value,
+      status: status,
+      id: myuuid
+    }
+    console.log(newTask)
+    setTasks(tasks.concat(newTask));
+    setShowPopup(false);
+  }
+
+
+  const handleChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(e.target.value);
+  }
+
   return (
     <div className={styles.popup}>
       <div className={styles.popupContent}>
@@ -12,15 +40,15 @@ const TaskPopup = ({status}: {status:string}) => {
         </div>
         <div className={styles.popupBody}>
           <form>
-            <input type="text" placeholder="Task Name" required/>
-            <input type="text" placeholder="Task Description" required />
-            <select name="status" id="status">
-              <option value='To Do'selected={status == 'To Do'? true : false}>To Do</option>
-              <option value='In Progress' selected={status == 'In Progress'? true : false}>In Progress</option>
-              <option value="Under review" selected={status == "Under review"? true : false}>Under review</option>
-              <option value="Done" selected={status == "Done"? true : false}>Done</option>
+            <input id='taskName' type="text" placeholder="Task Name" required/>
+            <input id='taskDescription' type="text" placeholder="Task Description" required />
+            <select name="status" id="status" defaultValue={status} onChange={handleChange}>
+              <option value='To Do'>To Do</option>
+              <option value='In Progress'>In Progress</option>
+              <option value="Under review">Under review</option>
+              <option value="Done">Done</option>
           </select>
-            <button>Add Task</button>
+            <button onClick={handleCreateTask}>Add Task</button>
           </form>
         </div>
       </div>
