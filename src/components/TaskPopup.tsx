@@ -14,14 +14,13 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
   const handleCreateTask = (e:React.MouseEvent) => {
     e.preventDefault();
     let myuuid = uuidv4();
-    console.log(myuuid)
     const newTask: TaskType  = {
       title: (document.getElementById('taskName') as HTMLInputElement).value,
       description: (document.getElementById('taskDescription') as HTMLInputElement).value,
       status: status,
       id: myuuid
     }
-    console.log(newTask)
+
     setTasks(tasks.concat(newTask));
     setShowPopup(false);
   }

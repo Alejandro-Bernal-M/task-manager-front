@@ -1,4 +1,7 @@
 import { useStateContext } from '@/context/StateContext';
+import styles from './task.module.css'
+import { PiDotsSixVerticalBold } from 'react-icons/pi';
+import React from 'react';
 
 type TaskProps = {
   title: string,
@@ -15,14 +18,43 @@ const Task = ({title, description, status, id}: TaskProps) => {
     setTasks(newTasks);
   }
 
+  const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
+    const id = (ev.target as HTMLDivElement).id;
+    ev.dataTransfer.setData("text/plain", id);
+    console.log('dragging', id);
+  }
+
+  const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>): void => {
+    console.log('drag end');
+    (ev.target as HTMLDivElement).setAttribute('draggable', 'false');
+  }
+
+  // const setDragable = () => {
+  //   const taskCard = document.getElementById(id);
+  //   taskCard!.setAttribute('draggable', 'true');
+  //   taskCard!.addEventListener('dragstart', handleDrag);
+  // }
+
+  const handleDragIconClick = (ev: React.MouseEvent<SVGSVGElement>): void => {
+    // Prevent drag from the parent div when clicking on the dragIcon
+    (ev.target as SVGSVGElement).parentElement!.setAttribute('draggable', 'true');
+    ev.stopPropagation();
+  };
+
+
+
   return (
-    <div  className={title}>
+    <div className={styles.taskCard}
+      id= {id}
+      draggable={false}
+      onDragStart={handleDragStart} 
+      onDragEnd={handleDragEnd} 
+    >
+      <PiDotsSixVerticalBold className={styles.dragIcon} onMouseDown={handleDragIconClick} />
       <h3>{title}</h3>
       <p>{description}</p>
-      <p>{status}</p>
-      <p>{id}</p>
-      <p>test</p>
-      <button onClick={handleDeleteTasks}>delete task</button>
+      {/* <p>{status}</p> */}
+      <button onClick={handleDeleteTasks}>Delete</button>
     </div>
   )
 }
