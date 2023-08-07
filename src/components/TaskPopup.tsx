@@ -3,6 +3,7 @@ import React from 'react'
 import { useStateContext } from '@/context/StateContext'
 import { TaskType } from '@/context/StateContext'
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-hot-toast';
 
 type TaskPopupProps = {
   status: string,
@@ -11,12 +12,19 @@ type TaskPopupProps = {
 
 const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
   const { setShowPopup, setTasks, tasks } = useStateContext();
+
   const handleCreateTask = (e:React.MouseEvent) => {
     e.preventDefault();
+    const title = (document.getElementById('taskName') as HTMLInputElement).value;
+    const description = (document.getElementById('taskDescription') as HTMLInputElement).value;
+    if (title === '' || description === '') {
+      toast.error('Please fill in all fields');
+      return;
+    }
     let myuuid = uuidv4();
     const newTask: TaskType  = {
-      title: (document.getElementById('taskName') as HTMLInputElement).value,
-      description: (document.getElementById('taskDescription') as HTMLInputElement).value,
+      title: title,
+      description: description,
       status: status,
       id: myuuid
     }
