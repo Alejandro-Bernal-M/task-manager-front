@@ -15,8 +15,22 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     setStatus(title);
     setShowPopup(true);
   }
+
+  const handleDrop = (ev: React.DragEvent<HTMLDivElement>): void => {
+    ev.preventDefault();
+    console.log('drop');
+  }
+
+  const handleDragOver = (ev: React.DragEvent<HTMLDivElement>): void => {
+    ev.preventDefault();
+    console.log('drag over', title);
+  }
+
   return (
-    <div className={styles.column}>
+    <div className={styles.column}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+    >
       <h2>{title}</h2>
       <button className={styles.addTask} onClick={handleAddTask}>Add Task +</button>
       <div className={styles.tasksColumn} id={title}>

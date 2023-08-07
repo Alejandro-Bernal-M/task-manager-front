@@ -20,20 +20,16 @@ const Task = ({title, description, status, id}: TaskProps) => {
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
     const id = (ev.target as HTMLDivElement).id;
-    ev.dataTransfer.setData("text/plain", id);
-    console.log('dragging', id);
+    ev.dataTransfer.setData("text/plain", status);
+    console.log('dragging', status);
+    (ev.target as HTMLDivElement).classList.add('dragging');
   }
 
   const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>): void => {
     console.log('drag end');
     (ev.target as HTMLDivElement).setAttribute('draggable', 'false');
+    (ev.target as HTMLDivElement).classList.remove('dragging');
   }
-
-  // const setDragable = () => {
-  //   const taskCard = document.getElementById(id);
-  //   taskCard!.setAttribute('draggable', 'true');
-  //   taskCard!.addEventListener('dragstart', handleDrag);
-  // }
 
   const handleDragIconClick = (ev: React.MouseEvent<SVGSVGElement>): void => {
     // Prevent drag from the parent div when clicking on the dragIcon
