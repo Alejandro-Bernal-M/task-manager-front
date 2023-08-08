@@ -9,7 +9,7 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks } = useStateContext();
+  const { setShowPopup, tasks, setTasks, draggedTask } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -18,12 +18,21 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
 
   const handleDrop = (ev: React.DragEvent<HTMLDivElement>): void => {
     ev.preventDefault();
-    console.log('drop');
+  }
+  
+  const changeDraggedTaskStatus = () => {
+    let newTasks = tasks.map(task => {
+      if (task.id === draggedTask?.id) {
+        task.status = title;
+      }
+      return task;
+    })
+    setTasks(newTasks);
   }
 
   const handleDragOver = (ev: React.DragEvent<HTMLDivElement>): void => {
     ev.preventDefault();
-    console.log('drag over', title);
+    changeDraggedTaskStatus();
   }
 
   return (

@@ -20,6 +20,8 @@ type ContextType = {
   setToken: (token: string) => void;
   showPopup: boolean;
   setShowPopup: (showPopup: boolean) => void;
+  draggedTask: TaskType | null;
+  setDraggedTask: (draggedTask: TaskType | null) => void;
 };
 
 export type TaskType = {
@@ -41,6 +43,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -70,7 +73,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         token,
         setToken,
         showPopup,
-        setShowPopup
+        setShowPopup,
+        draggedTask,
+        setDraggedTask
         }}>
         {children}
     </context.Provider>

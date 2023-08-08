@@ -11,7 +11,7 @@ type TaskProps = {
 }
 
 const Task = ({title, description, status, id}: TaskProps) => {
-  const { tasks, setTasks } = useStateContext();
+  const { tasks, setTasks, setDraggedTask } = useStateContext();
 
   const handleDeleteTasks = () => {
     const newTasks = tasks.filter(task => task.id !== id);
@@ -19,16 +19,15 @@ const Task = ({title, description, status, id}: TaskProps) => {
   }
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
-    const id = (ev.target as HTMLDivElement).id;
-    ev.dataTransfer.setData("text/plain", status);
-    console.log('dragging', status);
     (ev.target as HTMLDivElement).classList.add('dragging');
+    let taskToDrag = tasks.filter(task => task.id === id);
+    setDraggedTask(taskToDrag[0]);
   }
 
   const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>): void => {
-    console.log('drag end');
     (ev.target as HTMLDivElement).setAttribute('draggable', 'false');
     (ev.target as HTMLDivElement).classList.remove('dragging');
+    setDraggedTask(null);
   }
 
   const handleDragIconClick = (ev: React.MouseEvent<SVGSVGElement>): void => {
