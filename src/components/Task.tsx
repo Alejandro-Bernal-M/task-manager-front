@@ -11,11 +11,38 @@ type TaskProps = {
 }
 
 const Task = ({title, description, status, id}: TaskProps) => {
-  const { tasks, setTasks, setDraggedTask } = useStateContext();
+  const { tasks, setTasks, setDraggedTask, mousePosition, setMousePosition, previousSiblingPosition,nextSiblingPosition, setPreviousSiblingPosition, setNextSiblingPosition, setIdToChange } = useStateContext();
 
   const handleDeleteTasks = () => {
     const newTasks = tasks.filter(task => task.id !== id);
     setTasks(newTasks);
+  }
+
+  const handleDrag = (ev: React.DragEvent<HTMLDivElement>): void => {
+    setMousePosition(ev.clientY);
+    let previousSiblingNode = (ev.target as HTMLDivElement).previousSibling as HTMLDivElement | null;;
+    let nextSiblingNode = (ev.target as HTMLDivElement).nextSibling as HTMLDivElement | null;;
+
+    setPreviousSiblingPosition(previousSiblingNode?.getBoundingClientRect().top);
+    setNextSiblingPosition(nextSiblingNode?.getBoundingClientRect().top);
+    if (previousSiblingPosition && mousePosition < previousSiblingPosition) {
+      console.log('mouse is above previous sibling');
+      if (previousSiblingNode) {
+        setIdToChange(previousSiblingNode?.id);
+      }
+    } else if (nextSiblingPosition && mousePosition > nextSiblingPosition) {
+      console.log('mouse is below next sibling');
+      if (nextSiblingNode) {
+        setIdToChange(nextSiblingNode?.id);
+      }
+    } else {
+      console.log('mouse is between siblings');
+    }
+    console.log('prev', previousSiblingPosition);
+    console.log('mouse', mousePosition);
+    console.log('next', nextSiblingPosition);
+    console.log('prev node', previousSiblingNode);
+    console.log('next node', nextSiblingNode);
   }
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
@@ -44,6 +71,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
       draggable={false}
       onDragStart={handleDragStart} 
       onDragEnd={handleDragEnd} 
+      onDrag={handleDrag}
     >
       <PiDotsSixVerticalBold className={styles.dragIcon} onMouseDown={handleDragIconClick} />
       <h3>{title}</h3>

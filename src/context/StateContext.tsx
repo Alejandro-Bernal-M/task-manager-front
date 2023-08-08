@@ -22,6 +22,14 @@ type ContextType = {
   setShowPopup: (showPopup: boolean) => void;
   draggedTask: TaskType | null;
   setDraggedTask: (draggedTask: TaskType | null) => void;
+  mousePosition: number;
+  setMousePosition: (mousePosition: number) => void;
+  previousSiblingPosition: number | undefined;
+  setPreviousSiblingPosition: (previousSiblingPosition: number | undefined) => void;
+  nextSiblingPosition: number | undefined;
+  setNextSiblingPosition: (nextSiblingPosition: number | undefined) => void;
+  idToChange: string;
+  setIdToChange: (idToChange: string) => void;
 };
 
 export type TaskType = {
@@ -44,6 +52,10 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
+  const [mousePosition, setMousePosition] = useState<number>(0);
+  const [previousSiblingPosition, setPreviousSiblingPosition] = useState<number | undefined>(0);
+  const [nextSiblingPosition, setNextSiblingPosition] = useState<number | undefined>(0);
+  const [idToChange, setIdToChange] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,7 +87,15 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         showPopup,
         setShowPopup,
         draggedTask,
-        setDraggedTask
+        setDraggedTask,
+        mousePosition,
+        setMousePosition,
+        previousSiblingPosition,
+        setPreviousSiblingPosition,
+        nextSiblingPosition,
+        setNextSiblingPosition,
+        idToChange,
+        setIdToChange
         }}>
         {children}
     </context.Provider>

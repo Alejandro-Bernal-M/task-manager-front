@@ -9,7 +9,7 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask } = useStateContext();
+  const { setShowPopup, tasks, setTasks, draggedTask, idToChange } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -21,8 +21,11 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
   }
   
   const changeDraggedTaskStatus = () => {
-    let newTasks = tasks.map(task => {
+    let newTasks = tasks.map((task, index) => {
       if (task.id === draggedTask?.id) {
+        const index = tasks.indexOf(task);
+        const indexToChange = tasks.findIndex(task => task.id === idToChange);
+        console.log('to change', indexToChange);
         task.status = title;
       }
       return task;
@@ -30,9 +33,20 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     setTasks(newTasks);
   }
 
+  const swapTasksPositions = () => {
+    let newTasks = [...tasks];
+    let draggedTaskIndex = newTasks.findIndex(task => task.id === draggedTask?.id);
+    let taskToChangeIndex = newTasks.findIndex(task => task.id === idToChange);
+    if(draggedTaskIndex === -1 || taskToChangeIndex === -1) return;
+    [newTasks[draggedTaskIndex], newTasks[taskToChangeIndex]] = [newTasks[taskToChangeIndex], newTasks[draggedTaskIndex]];
+    setTasks(newTasks);
+  }
+
+
   const handleDragOver = (ev: React.DragEvent<HTMLDivElement>): void => {
     ev.preventDefault();
     changeDraggedTaskStatus();
+    swapTasksPositions();
   }
 
   return (
