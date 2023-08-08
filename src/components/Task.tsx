@@ -19,7 +19,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
   }
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
-    (ev.target as HTMLDivElement).classList.add('dragging');
+    (ev.target as HTMLDivElement).classList.add('dragging')
     let taskToDrag = tasks.filter(task => task.id === id);
     setDraggedTask(taskToDrag[0]);
   }
@@ -48,7 +48,6 @@ const Task = ({title, description, status, id}: TaskProps) => {
       <PiDotsSixVerticalBold className={styles.dragIcon} onMouseDown={handleDragIconClick} />
       <h3>{title}</h3>
       <p>{description}</p>
-      {/* <p>{status}</p> */}
       <button onClick={handleDeleteTasks}>Delete</button>
     </div>
   )

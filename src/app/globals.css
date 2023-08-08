@@ -39,6 +39,5 @@ h2 {
 
 .dragging {
   opacity: 0.5;
-  cursor: grabbing;
+  cursor: grabbing !important;
 }
-  

@@ -42,3 +42,18 @@
   position: relative;
   color: var(--color-5);
 }
+
+.dragIcon:hover {
+  animation: grabbingAnimation 0.5s infinite alternate;
+}
+
+@keyframes grabbingAnimation {
+  0% {
+    cursor: grabbing;
+  }
+
+  100% {
+    cursor: grab;
+  }
+
+}
