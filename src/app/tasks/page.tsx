@@ -4,11 +4,37 @@ import styles from './tasks.module.css'
 import StatusColumn from '@/components/StatusColumn'
 import TaskPopup from '@/components/TaskPopup'
 import { useStateContext } from '@/context/StateContext'
-import { useState } from 'react'
+import { use, useState, useEffect } from 'react'
+import api from '@/utils/common'
 
 const Tasks = () => {
-  const { showPopup } = useStateContext();
+  const { showPopup, setTasks } = useStateContext();
   const [status, setStatus] = useState('' as string)
+
+  let user = localStorage.getItem('user_id')
+  if (user == null) user = ''
+  const url = api.loadTasks(user)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(url,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': JSON.parse(localStorage.getItem('token') || '')
+          }
+        })
+        const data = await response.json()
+        setTasks(data)
+        console.log(data)
+      }
+      catch(error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  },[])
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (
