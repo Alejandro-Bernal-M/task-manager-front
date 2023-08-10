@@ -24,12 +24,18 @@ type ContextType = {
   setDraggedTask: (draggedTask: TaskType | null) => void;
   mousePosition: number;
   setMousePosition: (mousePosition: number) => void;
+  previousSiblingNode: HTMLDivElement | null;
+  setPreviousSiblingNode: (previousSiblingNode: HTMLDivElement | null) => void;
+  nextSiblingNode: HTMLDivElement | null;
+  setNextSiblingNode: (nextSiblingNode: HTMLDivElement | null) => void;
   previousSiblingPosition: number | undefined;
   setPreviousSiblingPosition: (previousSiblingPosition: number | undefined) => void;
   nextSiblingPosition: number | undefined;
   setNextSiblingPosition: (nextSiblingPosition: number | undefined) => void;
   idToChange: string;
   setIdToChange: (idToChange: string) => void;
+  Node: HTMLElement | null;
+  setNode: (Node: HTMLElement | null) => void;
 };
 
 export type TaskType = {
@@ -53,9 +59,12 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
   const [mousePosition, setMousePosition] = useState<number>(0);
+  const [previousSiblingNode, setPreviousSiblingNode] = useState<HTMLDivElement | null>(null);
+  const [nextSiblingNode, setNextSiblingNode] = useState<HTMLDivElement | null>(null);
   const [previousSiblingPosition, setPreviousSiblingPosition] = useState<number | undefined>(0);
   const [nextSiblingPosition, setNextSiblingPosition] = useState<number | undefined>(0);
   const [idToChange, setIdToChange] = useState<string>('');
+  const [Node, setNode] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -90,12 +99,18 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setDraggedTask,
         mousePosition,
         setMousePosition,
+        previousSiblingNode,
+        setPreviousSiblingNode,
+        nextSiblingNode,
+        setNextSiblingNode,
         previousSiblingPosition,
         setPreviousSiblingPosition,
         nextSiblingPosition,
         setNextSiblingPosition,
         idToChange,
-        setIdToChange
+        setIdToChange,
+        Node,
+        setNode
         }}>
         {children}
     </context.Provider>
