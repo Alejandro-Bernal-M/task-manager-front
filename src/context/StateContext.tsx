@@ -36,6 +36,8 @@ type ContextType = {
   setIdToChange: (idToChange: string) => void;
   Node: HTMLElement | null;
   setNode: (Node: HTMLElement | null) => void;
+  taskCounter: number;
+  setTaskCounter: (taskCounter: number) => void;
 };
 
 export type TaskType = {
@@ -65,6 +67,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [nextSiblingPosition, setNextSiblingPosition] = useState<number | undefined>(0);
   const [idToChange, setIdToChange] = useState<string>('');
   const [Node, setNode] = useState<HTMLElement | null>(null);
+  const [taskCounter, setTaskCounter] = useState<number>(0);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -110,7 +113,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         idToChange,
         setIdToChange,
         Node,
-        setNode
+        setNode,
+        taskCounter,
+        setTaskCounter
         }}>
         {children}
     </context.Provider>

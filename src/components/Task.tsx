@@ -2,6 +2,8 @@ import { useStateContext } from '@/context/StateContext';
 import styles from './task.module.css'
 import { PiDotsSixVerticalBold } from 'react-icons/pi';
 import React, { useEffect, useState } from 'react';
+import api from '@/utils/common';
+import { toast } from 'react-hot-toast';
 
 
 type TaskProps = {
@@ -13,7 +15,9 @@ type TaskProps = {
 
 const Task = ({title, description, status, id}: TaskProps) => {
   const { tasks,
-          setTasks,
+          taskCounter,
+          setLoggedIn,
+          setTaskCounter,
           setDraggedTask,
           mousePosition,
           setMousePosition,
@@ -30,9 +34,36 @@ const Task = ({title, description, status, id}: TaskProps) => {
           setNode
         } = useStateContext();
 
-  const handleDeleteTasks = () => {
-    const newTasks = tasks.filter(task => task.id !== id);
-    setTasks(newTasks);
+  const handleDeleteTasks = async() => {
+    const tokenString = localStorage.getItem('token');
+    if (!tokenString) {
+      toast.error('Your session has expired, please login again');
+      setLoggedIn(false);
+      return;
+    }
+    let token = JSON.parse(tokenString);
+    
+    const userId = localStorage.getItem('user_id') || '';
+    const url = api.deleteTask(userId, id);
+
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': token
+        }
+      })
+      const data = await response.json();
+      setTaskCounter(taskCounter - 1);
+      if(data.error) {
+        toast.error('Your session has expired, please login again');
+        setLoggedIn(false);
+        return;
+      }
+      toast.success('Task deleted successfully');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import api from '@/utils/common'
 import { toast } from 'react-hot-toast'
 
 const Tasks = () => {
-  const { showPopup, setTasks, setLoggedIn } = useStateContext();
+  const { showPopup, setTasks, setLoggedIn, taskCounter } = useStateContext();
   const [status, setStatus] = useState('' as string)
 
   let user = localStorage.getItem('user_id')
@@ -36,7 +36,7 @@ const Tasks = () => {
       }
     }
     fetchData()
-  },[])
+  },[taskCounter])
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (

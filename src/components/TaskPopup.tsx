@@ -10,7 +10,7 @@ type TaskPopupProps = {
 }
 
 const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
-  const { setShowPopup, setLoggedIn } = useStateContext();
+  const { setShowPopup, setLoggedIn, taskCounter, setTaskCounter } = useStateContext();
 
   const handleCreateTask = async(e:React.MouseEvent) => {
     e.preventDefault();
@@ -41,6 +41,8 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
         body: JSON.stringify(newTask)
       })
       const data = await response.json();
+      setTaskCounter(taskCounter + 1);
+      toast.success('Task created successfully');
       console.log(data);
     } catch (error) {
       if(error == 'Unauthorized') {
