@@ -64,27 +64,24 @@ const Task = ({title, description, status, id}: TaskProps) => {
     }
 
     setMousePosition(ev.clientY);
-    console.log('mouse position', mousePosition);
-
-    
 
     if (previousSiblingPosition != undefined && mousePosition < previousSiblingPosition) {
-      console.log('mouse is above previous sibling');
       if (previousSiblingNode) {
         setIdToChange(previousSiblingNode.id);
-      }
-    } else if (nextSiblingPosition != undefined  && mousePosition > nextSiblingPosition) {
-      console.log('mouse is below next sibling');
+        const [prevNode, currentNode] = [Node, previousSiblingNode];
+        setPreviousSiblingNode(prevNode);
+        setNode(currentNode);
+
+      }}
+
+    if (nextSiblingPosition != undefined  && mousePosition > nextSiblingPosition) {
       if (nextSiblingNode) {
         setIdToChange(nextSiblingNode.id);
+        const [nextNode, currentNode] = [Node, nextSiblingNode];
+        setNextSiblingNode(nextNode);
+        setNode(currentNode);
       }
-    } else {
-      console.log('mouse is between siblings');
-    }
-    console.log('prev', previousSiblingPosition);
-    console.log('next', nextSiblingPosition);
-    console.log('prev node', previousSiblingNode);
-    console.log('next node', nextSiblingNode);
+    } 
   }
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
@@ -102,7 +99,6 @@ const Task = ({title, description, status, id}: TaskProps) => {
     (ev.target as SVGSVGElement).parentElement!.setAttribute('draggable', 'true');
     ev.stopPropagation();
     setNode((ev.target as SVGSVGElement).parentElement);
-    console.log('node', Node);
   };
   
   

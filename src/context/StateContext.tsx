@@ -24,10 +24,10 @@ type ContextType = {
   setDraggedTask: (draggedTask: TaskType | null) => void;
   mousePosition: number;
   setMousePosition: (mousePosition: number) => void;
-  previousSiblingNode: HTMLDivElement | null;
-  setPreviousSiblingNode: (previousSiblingNode: HTMLDivElement | null) => void;
-  nextSiblingNode: HTMLDivElement | null;
-  setNextSiblingNode: (nextSiblingNode: HTMLDivElement | null) => void;
+  previousSiblingNode: HTMLElement | null;
+  setPreviousSiblingNode: (previousSiblingNode: HTMLElement | null) => void;
+  nextSiblingNode: HTMLElement | null;
+  setNextSiblingNode: (nextSiblingNode: HTMLElement | null) => void;
   previousSiblingPosition: number | undefined;
   setPreviousSiblingPosition: (previousSiblingPosition: number | undefined) => void;
   nextSiblingPosition: number | undefined;
@@ -59,8 +59,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
   const [mousePosition, setMousePosition] = useState<number>(0);
-  const [previousSiblingNode, setPreviousSiblingNode] = useState<HTMLDivElement | null>(null);
-  const [nextSiblingNode, setNextSiblingNode] = useState<HTMLDivElement | null>(null);
+  const [previousSiblingNode, setPreviousSiblingNode] = useState<HTMLElement | null>(null);
+  const [nextSiblingNode, setNextSiblingNode] = useState<HTMLElement | null>(null);
   const [previousSiblingPosition, setPreviousSiblingPosition] = useState<number | undefined>(0);
   const [nextSiblingPosition, setNextSiblingPosition] = useState<number | undefined>(0);
   const [idToChange, setIdToChange] = useState<string>('');
