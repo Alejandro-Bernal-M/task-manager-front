@@ -44,7 +44,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
     let token = JSON.parse(tokenString);
     
     const userId = localStorage.getItem('user_id') || '';
-    const url = api.deleteTask(userId, id);
+    const url = api.Task(userId, id);
 
     try {
       const response = await fetch(url, {

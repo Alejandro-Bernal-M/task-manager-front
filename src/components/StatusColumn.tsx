@@ -1,6 +1,8 @@
 import styles from './statusColumns.module.css'
 import { useStateContext } from '@/context/StateContext'
 import Task from './Task'
+import api from '@/utils/common'
+import { toast } from 'react-hot-toast'
 
 type StatusColumnProps = {
   title: string,
@@ -9,15 +11,49 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode } = useStateContext();
+  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
     setShowPopup(true);
   }
 
-  const handleDrop = (ev: React.DragEvent<HTMLDivElement>): void => {
+  const handleDrop = async(ev: React.DragEvent<HTMLDivElement>) => {
     ev.preventDefault();
+    const tokenString = localStorage.getItem('token');
+    if (!tokenString) {
+      toast.error('Your session has expired, please login again');
+      setLoggedIn(false);
+      return;
+    }
+    let token = JSON.parse(tokenString);
+    
+    const userId = localStorage.getItem('user_id') || '';
+    if (!draggedTask) return;
+    const url = api.Task(userId, draggedTask?.id);
+
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          task: {
+            status: title
+          }
+        })
+      })
+
+      const data = await response.json();
+      if(data.errors) {
+        toast.error(data.errors)
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
     setNode(null);
   }
   
@@ -29,6 +65,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       return task;
     })
     setTasks(newTasks);
+
   }
 
   const swapTasksPositions = () => {
