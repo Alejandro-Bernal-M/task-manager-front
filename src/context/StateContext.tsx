@@ -45,6 +45,7 @@ export type TaskType = {
   description: string;
   status: string;
   id: string;
+  order: number;
 };
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {

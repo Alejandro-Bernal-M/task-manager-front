@@ -11,7 +11,7 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn } = useStateContext();
+  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn, taskCounter, setTaskCounter } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -20,6 +20,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
 
   const handleDrop = async(ev: React.DragEvent<HTMLDivElement>) => {
     ev.preventDefault();
+    swapTasksPositions();
     const tokenString = localStorage.getItem('token');
     if (!tokenString) {
       toast.error('Your session has expired, please login again');
@@ -50,7 +51,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       if(data.errors) {
         toast.error(data.errors)
       }
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -68,21 +69,78 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
 
   }
 
-  const swapTasksPositions = () => {
-    let newTasks = [...tasks];
-    let draggedTaskIndex = newTasks.findIndex(task => task.id === draggedTask?.id);
-    let taskToChangeIndex = newTasks.findIndex(task => task.id === idToChange);
+  const swapTasksPositions =async () => {
+    // let newTasks = [...tasks];
+    if(idToChange === draggedTask?.id) return;
+    let draggedTaskIndex = tasks.find(task => task.id == draggedTask?.id)?.order;
+    let taskToChangeIndex = tasks.find(task => task.id == idToChange)?.order;
+    console.log(draggedTaskIndex, taskToChangeIndex)
     if(draggedTaskIndex === -1 || taskToChangeIndex === -1) return;
-    [newTasks[draggedTaskIndex], newTasks[taskToChangeIndex]] = [newTasks[taskToChangeIndex], newTasks[draggedTaskIndex]];
+    const tokenString = localStorage.getItem('token');
+    if (!tokenString) {
+      toast.error('Your session has expired, please login again');
+      setLoggedIn(false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user_id');
+      return;
+    }
+    let token = JSON.parse(tokenString);
+    const userId = localStorage.getItem('user_id') || '';
+    const url1 = api.Task(userId, idToChange);
+    const url2 = api.Task(userId, draggedTask?.id || '');
+
+    console.log(url1, url2)
+    try {
+      const response = await fetch(url1, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          task: {
+            order: draggedTaskIndex
+          }
+        })
+      });
+      const data = await response.json();
+      console.log(data);
+      if(data.errors) {
+        toast.error(data.errors)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      const response = await fetch(url2, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          task: {
+            order: taskToChangeIndex
+          }
+        })
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      
+    }
+    // [newTasks[draggedTaskIndex], newTasks[taskToChangeIndex]] = [newTasks[taskToChangeIndex], newTasks[draggedTaskIndex]];
     setIdToChange('')
-    setTasks(newTasks);
+    setTaskCounter(taskCounter + 1);
+    // setTasks(newTasks);
   }
 
 
   const handleDragOver = (ev: React.DragEvent<HTMLDivElement>): void => {
     ev.preventDefault();
     changeDraggedTaskStatus();
-    swapTasksPositions();
+    // swapTasksPositions();
+ 
   }
 
 

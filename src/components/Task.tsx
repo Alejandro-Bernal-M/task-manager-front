@@ -29,6 +29,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
           nextSiblingPosition,
           setPreviousSiblingPosition,
           setNextSiblingPosition,
+          idToChange,
           setIdToChange,
           Node,
           setNode
@@ -39,6 +40,8 @@ const Task = ({title, description, status, id}: TaskProps) => {
     if (!tokenString) {
       toast.error('Your session has expired, please login again');
       setLoggedIn(false);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user_id');
       return;
     }
     let token = JSON.parse(tokenString);
@@ -58,6 +61,8 @@ const Task = ({title, description, status, id}: TaskProps) => {
       if(data.error) {
         toast.error('Your session has expired, please login again');
         setLoggedIn(false);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
         return;
       }
       toast.success('Task deleted successfully');
@@ -88,7 +93,6 @@ const Task = ({title, description, status, id}: TaskProps) => {
 
   const handleDrag = (ev: React.DragEvent<HTMLDivElement>): void => {
     ev.preventDefault();
-    
     if (!previousSiblingNode && !nextSiblingNode){
       setIdToChange(id);
       return;
@@ -98,7 +102,9 @@ const Task = ({title, description, status, id}: TaskProps) => {
 
     if (previousSiblingPosition != undefined && mousePosition < previousSiblingPosition) {
       if (previousSiblingNode) {
+        console.log('changing' , previousSiblingNode.id)
         setIdToChange(previousSiblingNode.id);
+        console.log('idToChange', idToChange)
         const [prevNode, currentNode] = [Node, previousSiblingNode];
         setPreviousSiblingNode(prevNode);
         setNode(currentNode);
