@@ -1,9 +1,8 @@
 import styles from './taskPopup.module.css'
 import React from 'react'
 import { useStateContext } from '@/context/StateContext'
-import { TaskType } from '@/context/StateContext'
-import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-hot-toast';
+import api from '@/utils/common';
 
 type TaskPopupProps = {
   status: string,
@@ -11,9 +10,9 @@ type TaskPopupProps = {
 }
 
 const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
-  const { setShowPopup, setTasks, tasks } = useStateContext();
+  const { setShowPopup, setLoggedIn } = useStateContext();
 
-  const handleCreateTask = (e:React.MouseEvent) => {
+  const handleCreateTask = async(e:React.MouseEvent) => {
     e.preventDefault();
     const title = (document.getElementById('taskName') as HTMLInputElement).value;
     const description = (document.getElementById('taskDescription') as HTMLInputElement).value;
@@ -21,15 +20,36 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
       toast.error('Please fill in all fields');
       return;
     }
-    let myuuid = uuidv4();
-    const newTask: TaskType  = {
-      title: title,
-      description: description,
-      status: status,
-      id: myuuid
+    const newTask  = {
+      task:{
+        title: title,
+        description: description,
+        status: status,
+        author_id: localStorage.getItem('user_id') || '',
+      }
     }
 
-    setTasks(tasks.concat(newTask));
+    const token = JSON.parse(localStorage.getItem('token') || '');
+    const url = api.Tasks(localStorage.getItem('user_id') || '');
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json',
+          'Authorization' : token
+        },
+        body: JSON.stringify(newTask)
+      })
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      if(error == 'Unauthorized') {
+        toast.error('Your session has expired, please login again');
+        setLoggedIn(false);
+      }
+      console.log(error);
+    }
+
     setShowPopup(false);
   }
 

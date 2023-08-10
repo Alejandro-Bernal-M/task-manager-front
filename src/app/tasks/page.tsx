@@ -4,16 +4,17 @@ import styles from './tasks.module.css'
 import StatusColumn from '@/components/StatusColumn'
 import TaskPopup from '@/components/TaskPopup'
 import { useStateContext } from '@/context/StateContext'
-import { use, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import api from '@/utils/common'
+import { toast } from 'react-hot-toast'
 
 const Tasks = () => {
-  const { showPopup, setTasks } = useStateContext();
+  const { showPopup, setTasks, setLoggedIn } = useStateContext();
   const [status, setStatus] = useState('' as string)
 
   let user = localStorage.getItem('user_id')
   if (user == null) user = ''
-  const url = api.loadTasks(user)
+  const url = api.Tasks(user)
 
   useEffect(() => {
     async function fetchData() {
@@ -30,7 +31,8 @@ const Tasks = () => {
         console.log(data)
       }
       catch(error) {
-        console.log(error)
+        toast.error('Your session has expired, please login again');
+        setLoggedIn(false);
       }
     }
     fetchData()
