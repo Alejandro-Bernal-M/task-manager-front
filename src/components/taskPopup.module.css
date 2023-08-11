@@ -1,0 +1,96 @@
+.popup {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 80px);
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.popupContent {
+  width: 70%;
+  max-width: 500px;
+  height: 60%;
+  background-color: var(--color-5);
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.popupHeader {
+  width: 100%;
+}
+
+.popupHeader span {
+  float: right;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-1);
+}
+
+.popupHeader  h2{
+  color: var(--color-1);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1.5rem;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--color-1);
+}
+
+.popupBody {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupBody form {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupBody form input,
+.popupBody form select {
+  width: 100%;
+  height: 40px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  color: var(--color-1);
+  text-shadow: 1px 1px 1px var(--color-5);
+}
+
+.popupBody form select {
+  height: 50px;
+  cursor: pointer;
+}
+
+.popupBody form button {
+  width: 50%;
+  height: 40px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  background-color: var(--color-1);
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1rem;
+  cursor: pointer;
+}

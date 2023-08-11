@@ -17,9 +17,34 @@
 .navbar ul {
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
 .navbar ul li {
   list-style: none;
   font-weight: 400;
+}
+
+.navbar ul li a,
+.navbar p a {
+  text-decoration: none;
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1.5rem;
+}
+
+.navbar ul li button {
+  background-color: var(--color-2);
+  color: var(--color-3);
+  font-weight: 600;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  text-shadow: 1px 1px 1px var(--color-5);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.active {
+ border-bottom: 2px solid var(--color-3);
 }

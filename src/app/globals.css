@@ -36,4 +36,8 @@ h2 {
   cursor: pointer;
   outline: 1px solid slategray;
 }
-  
+
+.dragging {
+  opacity: 0.5;
+  cursor: grabbing !important;
+}

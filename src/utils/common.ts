@@ -1,5 +1,8 @@
 const api= {
-  login: 'http://127.0.0.1:4000/api/v1/login'
+  login: `${process.env.NEXT_PUBLIC_API}/login`,
+  createUser: `${process.env.NEXT_PUBLIC_API}/users`,
+  Tasks: (user_id : string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/tasks`, // GET for all tasks, POST for create task
+  Task: (user_id : string, task_id : string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/tasks/${task_id}`, // DELETE for delete task and PATCH for update task
 }
 
 export default api

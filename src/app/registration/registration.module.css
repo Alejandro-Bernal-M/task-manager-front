@@ -4,4 +4,61 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    gap: 20px;
+    background-color: var(--color-3);
+}
+
+.container h1 {
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--color-1);
+    text-shadow: 2px 2px 1px var(--color-5);
+}
+
+.container form{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 1rem;
+    min-width: 290px;
+}
+
+.container form input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+    background-color: var(--color-2);
+}
+
+.container form input:focus {
+    border: 1px solid var(--color-1);
+}
+
+.container form input[type="submit"] {
+    background-color: var(--color-1);
+    color: var(--color-3);
+    font-weight: 600;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    text-shadow: 1px 1px 1px var(--color-5);
+}
+
+.container button {
+    background-color: var(--color-1);
+    color: var(--color-3);
+    font-weight: 600;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    text-shadow: 1px 1px 1px var(--color-5);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.container ::placeholder {
+    color: var(--color-5);
 }
