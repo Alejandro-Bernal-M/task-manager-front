@@ -29,10 +29,16 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
+        if(data.error == 'Unauthorized'){
+          toast.error('Your session has expired, please login again');
+          localStorage.removeItem('token');
+          setLoggedIn(false);
+        }
         setTasks(data)
-        console.log(data)
+        console.log('task page', data)
       }
       catch(error) {
+        console.log('hello error')
         toast.error('Your session has expired, please login again');
         setLoggedIn(false);
       }
