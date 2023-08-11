@@ -7,10 +7,12 @@ import { useStateContext } from '@/context/StateContext'
 import { useState, useEffect } from 'react'
 import api from '@/utils/common'
 import { toast } from 'react-hot-toast'
+import { usePathname } from 'next/navigation'
 
 const Tasks = () => {
   const { showPopup, setTasks, setLoggedIn, taskCounter } = useStateContext();
   const [status, setStatus] = useState('' as string)
+  const pathname = usePathname()
 
   let user = localStorage.getItem('user_id')
   if (user == null) user = ''
@@ -36,7 +38,7 @@ const Tasks = () => {
       }
     }
     fetchData()
-  },[taskCounter])
+  },[taskCounter, pathname])
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (

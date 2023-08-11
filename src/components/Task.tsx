@@ -59,10 +59,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
       const data = await response.json();
       setTaskCounter(taskCounter - 1);
       if(data.error) {
-        toast.error('Your session has expired, please login again');
-        setLoggedIn(false);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_id');
+        toast.error(data.error);
         return;
       }
       toast.success('Task deleted successfully');

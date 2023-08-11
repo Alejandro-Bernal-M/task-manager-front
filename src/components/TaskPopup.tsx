@@ -26,6 +26,7 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
         description: description,
         status: status,
         author_id: localStorage.getItem('user_id') || '',
+        order: 0
       }
     }
 
