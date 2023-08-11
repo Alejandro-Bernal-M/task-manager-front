@@ -80,7 +80,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     newTasks[taskToChangeIndex].order = newSecondOrder;
     newTasks[draggedTaskIndex].order = newFistOrder;
     swapTasksPositionsApi({task1: newTasks[draggedTaskIndex], task2: newTasks[taskToChangeIndex]});
-    console.log('after', newTasks);
     setTasks(newTasks.sort((a, b) => a.order - b.order));
     setIdToChange('')
   }
@@ -99,7 +98,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     const url1 = api.Task(userId, task1.id);
     const url2 = api.Task(userId, task2.id);
 
-    console.log(url1, url2)
     try {
       const response = await fetch(url1, {
         method: 'PATCH',
@@ -114,7 +112,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
         })
       });
       const data = await response.json();
-      console.log(data);
+
       if(data.errors) {
         toast.error(data.errors)
       }
@@ -135,7 +133,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
         })
       });
       const data = await response.json();
-      console.log(data);
+
     } catch (error) {
       
     }

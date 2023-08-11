@@ -99,9 +99,7 @@ const Task = ({title, description, status, id}: TaskProps) => {
 
     if (previousSiblingPosition != undefined && mousePosition < previousSiblingPosition) {
       if (previousSiblingNode) {
-        console.log('changing' , previousSiblingNode.id)
         setIdToChange(previousSiblingNode.id);
-        console.log('idToChange', idToChange)
         const [prevNode, currentNode] = [Node, previousSiblingNode];
         setPreviousSiblingNode(prevNode);
         setNode(currentNode);
