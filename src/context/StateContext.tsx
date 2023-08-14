@@ -38,6 +38,8 @@ type ContextType = {
   setNode: (Node: HTMLElement | null) => void;
   taskCounter: number;
   setTaskCounter: (taskCounter: number) => void;
+  groups: GroupType[];
+  setGroups: (groups: GroupType[]) => void;
 };
 
 export type TaskType = {
@@ -47,6 +49,13 @@ export type TaskType = {
   id: string;
   order: number;
 };
+
+type GroupType = {
+  title: string;
+  author_id: string;
+  description: string;
+  id: string;
+}
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const router = useRouter();
@@ -69,6 +78,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [idToChange, setIdToChange] = useState<string>('');
   const [Node, setNode] = useState<HTMLElement | null>(null);
   const [taskCounter, setTaskCounter] = useState<number>(0);
+  const [groups, setGroups] = useState<GroupType[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -116,7 +126,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         Node,
         setNode,
         taskCounter,
-        setTaskCounter
+        setTaskCounter,
+        groups,
+        setGroups
         }}>
         {children}
     </context.Provider>
