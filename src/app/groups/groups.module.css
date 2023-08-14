@@ -10,12 +10,6 @@
   gap: 20px;
 }
 
-.container h1 {
-  font-size: 3rem;
-  color: var(--color-5);
-  text-align: center;
-}
-
 .mainHolder {
   display: flex;
   width: 90%;
@@ -28,13 +22,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 2px;
   width: 50%;
   border: 2px solid var(--color-1);
   border-radius: 10px;
   background-color: var(--color-5);
   opacity: 0.9;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .groupHolder h2 {
@@ -46,4 +40,16 @@
 .groupHolder hr {
   width: 100%;
   border: 1px solid var(--color-1);
+}
+
+.addGroup {
+  font-size: 1rem;
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+  background-color: var(--color-1);
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  border: 2px solid var(--color-5);
+  border-radius: 10px;
 }
