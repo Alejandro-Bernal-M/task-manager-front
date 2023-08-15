@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import GroupsPopup from '@/components/GroupsPopup';
+import Group from '@/components/Group';
 
 const Groups = () => {
   const {
@@ -68,10 +69,7 @@ const Groups = () => {
             <button className={styles.addGroup} onClick={handleAddGroup}>Add Group +</button>
             <div className={styles.groupList}>
               {groups.map((group, index) => (
-                <div className={styles.group} key={index}>
-                  <p>{group.title}</p>
-                  <p>{group.description}</p>
-                </div>
+                <Group key={index} title={group.title} description={group.description} id={group.id} />
               ))}
             </ div>
           </div>
