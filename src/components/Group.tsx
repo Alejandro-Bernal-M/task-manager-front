@@ -29,18 +29,18 @@ const Group = ({title, description, id, subGroups}:{title:string, description:st
     }
   }
 
-  console.log(subGroups)
   return (
       <div className={styles.group}>
           <h3 className={styles.title}>{title}</h3>
           <p className={styles.description}>{description}</p>
-          <button onClick={deleteGroup}>Delete Group</button>
-          <div>
+          <button onClick={deleteGroup} className={styles.groupBtn}>Delete Group</button>
+          <div className={styles.subGroupsHolder}>
             <h4>Subgroups</h4>
             {subGroups.length == 0 && <p>No Subgroups</p>}
             {subGroups.map((subgroup) => (
-              <div key={subgroup.id}>
+              <div key={subgroup.id} className={styles.subgroup}>
                 <p>{subgroup.title}</p>
+                <button className={styles.subGroupBtn}>Delete sub-group</button>
               </div>
             ))}
           </div>
