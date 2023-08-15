@@ -39,6 +39,7 @@ const Tasks = () => {
       }
       catch(error) {
         console.log('hello error')
+        localStorage.removeItem('token');
         toast.error('Your session has expired, please login again');
         setLoggedIn(false);
       }
