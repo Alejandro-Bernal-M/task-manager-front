@@ -45,7 +45,7 @@ const Tasks = () => {
       }
     }
     fetchData()
-  },[taskCounter, pathname])
+  },[taskCounter, pathname, setLoggedIn, setTasks, url])
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (
