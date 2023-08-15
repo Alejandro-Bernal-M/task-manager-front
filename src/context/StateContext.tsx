@@ -38,8 +38,8 @@ type ContextType = {
   setNode: (Node: HTMLElement | null) => void;
   taskCounter: number;
   setTaskCounter: (taskCounter: number) => void;
-  groups: GroupType[];
-  setGroups: (groups: GroupType[]) => void;
+  groups: GroupWithSubgroups[];
+  setGroups: (groups: GroupWithSubgroups[]) => void;
   groupCount: number;
   setGroupCount: (groupCount: number) => void;
 };
@@ -57,6 +57,16 @@ type GroupType = {
   author_id: string;
   description: string;
   id: string;
+}
+
+export interface Subgroup {
+  id: number;
+  title: string;
+}
+
+interface GroupWithSubgroups {
+  group: GroupType;
+  subgroups: Subgroup[];
 }
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
@@ -80,7 +90,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [idToChange, setIdToChange] = useState<string>('');
   const [Node, setNode] = useState<HTMLElement | null>(null);
   const [taskCounter, setTaskCounter] = useState<number>(0);
-  const [groups, setGroups] = useState<GroupType[]>([]);
+  const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
   const [groupCount, setGroupCount] = useState(0);
 
   useEffect(() => {

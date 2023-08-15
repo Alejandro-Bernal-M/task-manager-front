@@ -69,7 +69,7 @@ const Groups = () => {
             <button className={styles.addGroup} onClick={handleAddGroup}>Add Group +</button>
             <div className={styles.groupList}>
               {groups.map((group, index) => (
-                <Group key={index} title={group.title} description={group.description} id={group.id} />
+                <Group key={index} title={group.group.title} description={group.group.description} id={group.group.id} subGroups={group.subgroups} />
               ))}
             </ div>
           </div>
