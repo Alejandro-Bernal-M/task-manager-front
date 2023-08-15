@@ -13,6 +13,8 @@ const Groups = () => {
           groups,
           setGroups,
           groupCount,
+          userGroups,
+          setUserGroups
         } = useStateContext();
   
   const [popup, setPopup] = useState(false);
@@ -29,13 +31,14 @@ const Groups = () => {
   const token = JSON.parse(tokenString);
 
   const userId = localStorage.getItem('user_id') || '';
-  const url = api.Groups(userId);
+  const urlGroups = api.groups(userId);
+  const urlUserGroups = api.userGroups(userId);
 
   useEffect(() => {
     const fetchGroups = async () => {
       try{
-        const response = await fetch(url, {
-          method: 'Get',
+        const response = await fetch(urlGroups, {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': token
@@ -51,8 +54,27 @@ const Groups = () => {
       console.log(error);
     }
   }
+
+  const fetchUserGroups = async () => {
+    try {
+      const response = await fetch(urlUserGroups, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+      const data = await response.json();
+      if(data.status === 'SUCCESS'){
+        setUserGroups(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchGroups();
-  }, [setGroups, url, token, groupCount])
+  }, [setGroups, urlGroups, token, groupCount, urlUserGroups, setUserGroups])
 
 
   const handleAddGroup = async() => {

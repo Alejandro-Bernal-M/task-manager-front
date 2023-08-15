@@ -42,6 +42,8 @@ type ContextType = {
   setGroups: (groups: GroupWithSubgroups[]) => void;
   groupCount: number;
   setGroupCount: (groupCount: number) => void;
+  userGroups: UserGroup[];
+  setUserGroups: (userGroups: UserGroup[]) => void;
 };
 
 export type TaskType = {
@@ -69,6 +71,11 @@ interface GroupWithSubgroups {
   subgroups: Subgroup[];
 }
 
+type UserGroup =  {
+  user_id: string;
+  subgroup_id: string;
+}
+
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -92,6 +99,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [taskCounter, setTaskCounter] = useState<number>(0);
   const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
   const [groupCount, setGroupCount] = useState(0);
+  const [userGroups, setUserGroups] = useState<UserGroup[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -143,7 +151,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         groups,
         setGroups,
         groupCount,
-        setGroupCount
+        setGroupCount,
+        userGroups,
+        setUserGroups
         }}>
         {children}
     </context.Provider>

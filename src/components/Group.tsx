@@ -9,7 +9,7 @@ const Group = ({title, description, id, subGroups}:{title:string, description:st
   const deleteGroup = async() => {
     const token = JSON.parse(localStorage.getItem('token') ||'');
     const user_id = JSON.parse(localStorage.getItem('user_id') ||'');
-    const url = api.SpecificGroup(user_id, id);
+    const url = api.specificGroup(user_id, id);
 
     try {
       const response = await fetch(url, {

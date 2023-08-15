@@ -35,7 +35,7 @@ const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
       description: groupDescription,
       author_id: author_id
     }
-    const url = api.Groups(localStorage.getItem('user_id') || '')
+    const url = api.groups(localStorage.getItem('user_id') || '')
     const token = JSON.parse(localStorage.getItem('token') || '')
 
     try {
