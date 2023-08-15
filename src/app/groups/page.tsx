@@ -10,11 +10,11 @@ const Groups = () => {
   const {
           setLoggedIn,
           groups,
-          setGroups
+          setGroups,
+          groupCount,
         } = useStateContext();
   
   const [popup, setPopup] = useState(false);
-  const [groupCount, setGroupCount] = useState(0);
 
         
   let tokenString = localStorage.getItem('token');
@@ -60,7 +60,7 @@ const Groups = () => {
 
   return (
     <div className={styles.container}>
-      {popup && <GroupsPopup setPopup={setPopup}  setGroupCount={setGroupCount}/>}
+      {popup && <GroupsPopup setPopup={setPopup}/>}
         <div className={styles.mainHolder}>
           <div className={styles.groupHolder}>
             <h2>Groups Created by you</h2>

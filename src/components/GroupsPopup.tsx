@@ -3,8 +3,8 @@ import api from '@/utils/common'
 import { toast } from 'react-hot-toast'
 import { useStateContext } from '@/context/StateContext'
 
-const GroupsPopup = ({setPopup, setGroupCount, groupCount} : { setPopup:(popup:boolean)=> void, setGroupCount:(groupCount:number) => void, groupCount:number}) => {
-  const { setLoggedIn } = useStateContext()
+const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
+  const { setLoggedIn, groupCount, setGroupCount } = useStateContext()
 
   const handleClose = () => {
     setPopup(false)
