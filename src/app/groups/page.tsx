@@ -20,7 +20,7 @@ const Groups = () => {
   const [popup, setPopup] = useState(false);
 
         
-  let tokenString = localStorage.getItem('token');
+  let tokenString = localStorage.getItem('token') || '';
   if (!tokenString) {
     toast.error('Your session has expired, please login again');
     setLoggedIn(false);
