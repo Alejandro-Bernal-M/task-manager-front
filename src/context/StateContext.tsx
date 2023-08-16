@@ -74,6 +74,7 @@ interface GroupWithSubgroups {
 type UserGroup =  {
   user_id: string;
   subgroup_id: string;
+  title: string;
 }
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {

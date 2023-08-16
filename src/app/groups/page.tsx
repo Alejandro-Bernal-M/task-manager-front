@@ -65,6 +65,7 @@ const Groups = () => {
         }
       });
       const data = await response.json();
+      console.log('user groups', data)
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
       }
@@ -74,13 +75,14 @@ const Groups = () => {
   }
 
   fetchGroups();
+  fetchUserGroups();
   }, [setGroups, urlGroups, token, groupCount, urlUserGroups, setUserGroups])
 
 
   const handleAddGroup = async() => {
     setPopup(true);
   }
-
+  console.log(userGroups)
   return (
     <div className={styles.container}>
       {popup && <GroupsPopup setPopup={setPopup}/>}
@@ -98,6 +100,11 @@ const Groups = () => {
           <div className={styles.groupHolder}>
             <h2>Sub-groups where you are in</h2>
             <hr />
+            <div>
+              {userGroups.map((group, index) => (
+                <h2>{group.title}</h2>
+                ))}
+            </div>
           </div>
         </div>
       </div>
