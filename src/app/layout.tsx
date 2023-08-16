@@ -18,9 +18,11 @@ export default function RootLayout({
     <html lang="en">
       <StateContext>
         <Toaster />
-        <Navigation />
-        <body>{children}</body>
-        <Footer />
+        <body>
+          <Navigation />
+          {children}
+          <Footer />
+        </body>
       </StateContext>
     </html>
   )

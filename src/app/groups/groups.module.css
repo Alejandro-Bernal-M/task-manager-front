@@ -3,10 +3,10 @@
   flex-direction: column;
   align-items: center;
   height: auto;
-  min-height: 100vh;
+  min-height: 100%;
   padding: 100px 5px 30px 5px;
   background-image: url('../../assets/images/stacked-steps-haikei.svg');
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
   gap: 20px;
 }
@@ -14,6 +14,7 @@
 .mainHolder {
   display: flex;
   width: 90%;
+  height: auto;
   flex: 1;
   justify-content: center;
   gap: 40px;
@@ -31,7 +32,8 @@
   background-color: var(--color-5);
   opacity: 0.9;
   padding: 20px 5px;
-  height: 100vh;
+  height: max(45vh, 550px);
+
 }
 
 .groupHolder h2 {
