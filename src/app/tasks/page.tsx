@@ -35,7 +35,6 @@ const Tasks = () => {
           setLoggedIn(false);
         }
         setTasks(data)
-        console.log('task page', data)
       }
       catch(error) {
         console.log('hello error')

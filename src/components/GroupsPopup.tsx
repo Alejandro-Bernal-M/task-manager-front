@@ -85,8 +85,13 @@ const GroupsPopup = () => {
         toast.success('Subgroup Created Successfully');
         setGroupCount(groupCount + 1);
       }
+      if(data.error){
+        toast.error('Your session has expired, please login again');
+        localStorage.removeItem('token');
+        setLoggedIn(false);
+      }
     } catch (error) {
-      
+      console.log(error)
     }
   }
   setGroupPopup(false)

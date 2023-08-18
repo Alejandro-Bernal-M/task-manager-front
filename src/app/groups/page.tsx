@@ -6,6 +6,7 @@ import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import GroupsPopup from '@/components/GroupsPopup';
 import Group from '@/components/Group';
+import Subgroup from '@/components/Subgroup';
 
 const Groups = () => {
   const {
@@ -46,7 +47,6 @@ const Groups = () => {
           }
         });
         const data = await response.json();
-        console.log(data)
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
         }
@@ -72,7 +72,6 @@ const Groups = () => {
         }
       });
       const data = await response.json();
-      console.log('user groups', data)
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
       }
@@ -96,7 +95,7 @@ const Groups = () => {
 
     setGroupPopup(true);
   }
-  console.log(userGroups)
+
   return (
     <div className={styles.container}>
       {groupPopup && <GroupsPopup />}
@@ -114,9 +113,9 @@ const Groups = () => {
           <div className={styles.groupHolder}>
             <h2>Sub-groups where you are in</h2>
             <hr />
-            <div>
+            <div className={styles.subGroupHolder}>
               {userGroups.map((group, index) => (
-                <h2>{group.title}</h2>
+                <Subgroup key={index} title={group.title} groupId={'0'} id={0} subGroupColumn={false} />
                 ))}
             </div>
           </div>
