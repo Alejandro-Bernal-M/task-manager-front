@@ -14,12 +14,13 @@ const Groups = () => {
           setGroups,
           groupCount,
           userGroups,
-          setUserGroups
+          setUserGroups,
+          groupAndSubgroupsPopUp,
+          setGroupAndSubgroupsPopUp,
+          groupPopup,
+          setGroupPopup
         } = useStateContext();
-  
-  const [popup, setPopup] = useState(false);
-
-        
+    
   let tokenString = localStorage.getItem('token') || '';
   if (!tokenString) {
     toast.error('Your session has expired, please login again');
@@ -48,6 +49,12 @@ const Groups = () => {
         console.log(data)
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
+        }
+        if(data.error == 'Unauthorized'){
+          toast.error('Your session has expired, please login again');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user_id');
+          setLoggedIn(false);
         }
     }
     catch(error){
@@ -80,12 +87,19 @@ const Groups = () => {
 
 
   const handleAddGroup = async() => {
-    setPopup(true);
+    setGroupAndSubgroupsPopUp({
+      popupTitle: 'Add Group',
+      title: 'Group Name',
+      description: 'Group Description',
+      button: 'Add Group'
+    })
+
+    setGroupPopup(true);
   }
   console.log(userGroups)
   return (
     <div className={styles.container}>
-      {popup && <GroupsPopup setPopup={setPopup}/>}
+      {groupPopup && <GroupsPopup />}
         <div className={styles.mainHolder}>
           <div className={styles.groupHolder}>
             <h2>Groups Created by you</h2>

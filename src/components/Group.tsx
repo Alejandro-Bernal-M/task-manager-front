@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { Subgroup } from '@/context/StateContext';
 
 const Group = ({title, description, id, subGroups}:{title:string, description:string, id:string, subGroups:Subgroup[]}) => {
-  const { setGroupCount, groupCount } = useStateContext();
+  const { setGroupCount, groupCount, setGroupAndSubgroupsPopUp, setGroupPopup, setGroupId } = useStateContext();
   const token = JSON.parse(localStorage.getItem('token') ||'');
   const user_id = JSON.parse(localStorage.getItem('user_id') ||'');
   const urlSpecificGroup = api.specificGroup(user_id, id);
@@ -29,28 +29,36 @@ const Group = ({title, description, id, subGroups}:{title:string, description:st
     }
   }
   
-  const createSubGroup = async() => {
-    try {
-      const response = await fetch(urlSubgroups, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify({
-          title: 'New Subgroup',
-          description: 'New Subgroup Description',
-          group_id: id,
-        })
-      })
-      const data = await response.json();
-      if(data.status == 'SUCCESS'){
-        toast.success('Subgroup Created Successfully');
-        setGroupCount(groupCount + 1);
-      }
-    } catch (error) {
+  const createSubGroup = () => {
+    setGroupAndSubgroupsPopUp({
+      popupTitle: 'Add Subgroup',
+      title: 'Subgroup Name',
+      description: 'Subgroup Description',
+      button: 'Add Subgroup'
+    })
+    setGroupId(id);
+    setGroupPopup(true);
+    // try {
+    //   const response = await fetch(urlSubgroups, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'Authorization': token
+    //     },
+    //     body: JSON.stringify({
+    //       title: 'New Subgroup',
+    //       description: 'New Subgroup Description',
+    //       group_id: id,
+    //     })
+    //   })
+    //   const data = await response.json();
+    //   if(data.status == 'SUCCESS'){
+    //     toast.success('Subgroup Created Successfully');
+    //     setGroupCount(groupCount + 1);
+    //   }
+    // } catch (error) {
       
-    }
+    // }
   }
 
   const deleteSubGroup = async (subid:number) => {

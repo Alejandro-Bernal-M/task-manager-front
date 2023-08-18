@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StateContext>
-        <Toaster />
         <body>
+        <Toaster />
           <Navigation />
           {children}
           <Footer />

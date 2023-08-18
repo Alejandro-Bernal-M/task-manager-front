@@ -3,11 +3,11 @@ import api from '@/utils/common'
 import { toast } from 'react-hot-toast'
 import { useStateContext } from '@/context/StateContext'
 
-const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
-  const { setLoggedIn, groupCount, setGroupCount } = useStateContext()
+const GroupsPopup = () => {
+  const { setLoggedIn, groupCount, setGroupCount, groupAndSubgroupsPopUp, setGroupPopup, groupId } = useStateContext()
 
   const handleClose = () => {
-    setPopup(false)
+    setGroupPopup(false)
   } 
 
   const handleCreateTask = async (e:React.MouseEvent<HTMLButtonElement>) => {
@@ -18,25 +18,27 @@ const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
       toast.error('Please fill all fields')
       return
     }
+    let groupOrSubgroup = groupAndSubgroupsPopUp?.title.split(' ')[0]
 
     if(groupName.length < 3 || groupName.length > 50) {
-      toast.error('Group name must be between 3 and 50 characters')
+      toast.error( `${groupOrSubgroup} name must be between 3 and 50 characters`)
       return
     }
 
     if(groupDescription.length < 3 || groupDescription.length > 500) {
-      toast.error('Group description must be between 3 and 500 characters')
+      toast.error(`${groupOrSubgroup} description must be between 3 and 500 characters`)
       return
     }
-
     const author_id = JSON.parse(localStorage.getItem('user_id') || '')
     const groupData = {
       title: groupName,
       description: groupDescription,
       author_id: author_id
     }
-    const url = api.groups(localStorage.getItem('user_id') || '')
     const token = JSON.parse(localStorage.getItem('token') || '')
+    
+    if(groupOrSubgroup == 'Group') {
+    const url = api.groups(localStorage.getItem('user_id') || '')
 
     try {
       const response = await fetch(url, {
@@ -47,8 +49,7 @@ const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
         },
         body: JSON.stringify(groupData)
       })
-      const data = await response.json()
-      console.log(data)
+      const data = await response.json();
       if(data.status == 'SUCCESS') {
         toast.success('Group created successfully')
         setGroupCount(groupCount + 1)
@@ -62,7 +63,33 @@ const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
     } catch (error) {
       console.log(error)
     }
-    setPopup(false)
+  }else {
+    const urlSubgroups = api.subGroups(author_id, groupId);
+    try {
+      const response = await fetch(urlSubgroups, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          subgroup: {
+            title: groupName,
+            description: groupDescription,
+            group_id: groupId,
+          }
+        })
+      })
+      const data = await response.json();
+      if(data.status == 'SUCCESS'){
+        toast.success('Subgroup Created Successfully');
+        setGroupCount(groupCount + 1);
+      }
+    } catch (error) {
+      
+    }
+  }
+  setGroupPopup(false)
   }
 
 
@@ -71,13 +98,13 @@ const GroupsPopup = ({setPopup} : { setPopup:(popup:boolean)=> void}) => {
     <div className={styles.popupContent}>
       <div className={styles.popupHeader}>
         <span onClick={handleClose} className="close">&times;</span>
-        <h2>Add Group</h2>
+        <h2>{groupAndSubgroupsPopUp?.popupTitle}</h2>
       </div>
       <div className={styles.popupBody}>
         <form>
-          <input id='groupName' type="text" placeholder="Group Name" required/>
-          <textarea id='groupDescription' placeholder="Group Description" cols={5} required />
-          <button onClick={handleCreateTask}>Add Group</button>
+          <input id='groupName' type="text" placeholder={groupAndSubgroupsPopUp?.title} required/>
+          <textarea id='groupDescription' placeholder={groupAndSubgroupsPopUp?.description} cols={5} required />
+          <button onClick={handleCreateTask}>{groupAndSubgroupsPopUp?.button}</button>
         </form>
       </div>
     </div>

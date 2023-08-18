@@ -44,6 +44,12 @@ type ContextType = {
   setGroupCount: (groupCount: number) => void;
   userGroups: UserGroup[];
   setUserGroups: (userGroups: UserGroup[]) => void;
+  groupAndSubgroupsPopUp: GroupAndSubgroupsPopUp;
+  setGroupAndSubgroupsPopUp: (groupAndSubgroupsPopUp: GroupAndSubgroupsPopUp) => void;
+  groupPopup: boolean;
+  setGroupPopup: (groupPopup: boolean) => void;
+  groupId: string;
+  setGroupId: (groupId: string) => void;
 };
 
 export type TaskType = {
@@ -77,6 +83,13 @@ type UserGroup =  {
   title: string;
 }
 
+type GroupAndSubgroupsPopUp = {
+  popupTitle: string;
+  title: string;
+  description: string;
+  button: string;
+} | null;
+
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -101,6 +114,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
   const [groupCount, setGroupCount] = useState(0);
   const [userGroups, setUserGroups] = useState<UserGroup[]>([]);
+  const [groupAndSubgroupsPopUp, setGroupAndSubgroupsPopUp] = useState<GroupAndSubgroupsPopUp>(null);
+  const [groupPopup, setGroupPopup] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -154,7 +170,13 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         groupCount,
         setGroupCount,
         userGroups,
-        setUserGroups
+        setUserGroups,
+        groupAndSubgroupsPopUp,
+        setGroupAndSubgroupsPopUp,
+        groupPopup,
+        setGroupPopup,
+        groupId,
+        setGroupId
         }}>
         {children}
     </context.Provider>
