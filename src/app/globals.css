@@ -16,6 +16,11 @@
   font-family: var(--font);
 }
 
+body,
+html {
+  height: 100%;
+}
+
 h1,
 h2 {
   font-weight: 700;

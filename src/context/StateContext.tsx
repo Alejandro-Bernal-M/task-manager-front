@@ -38,6 +38,18 @@ type ContextType = {
   setNode: (Node: HTMLElement | null) => void;
   taskCounter: number;
   setTaskCounter: (taskCounter: number) => void;
+  groups: GroupWithSubgroups[];
+  setGroups: (groups: GroupWithSubgroups[]) => void;
+  groupCount: number;
+  setGroupCount: (groupCount: number) => void;
+  userGroups: UserGroup[];
+  setUserGroups: (userGroups: UserGroup[]) => void;
+  groupAndSubgroupsPopUp: GroupAndSubgroupsPopUp;
+  setGroupAndSubgroupsPopUp: (groupAndSubgroupsPopUp: GroupAndSubgroupsPopUp) => void;
+  groupPopup: boolean;
+  setGroupPopup: (groupPopup: boolean) => void;
+  groupId: string;
+  setGroupId: (groupId: string) => void;
 };
 
 export type TaskType = {
@@ -47,6 +59,36 @@ export type TaskType = {
   id: string;
   order: number;
 };
+
+type GroupType = {
+  title: string;
+  author_id: string;
+  description: string;
+  id: string;
+}
+
+export interface Subgroup {
+  id: number;
+  title: string;
+}
+
+interface GroupWithSubgroups {
+  group: GroupType;
+  subgroups: Subgroup[];
+}
+
+type UserGroup =  {
+  user_id: string;
+  subgroup_id: string;
+  title: string;
+}
+
+type GroupAndSubgroupsPopUp = {
+  popupTitle: string;
+  title: string;
+  description: string;
+  button: string;
+} | null;
 
 export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const router = useRouter();
@@ -69,6 +111,12 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [idToChange, setIdToChange] = useState<string>('');
   const [Node, setNode] = useState<HTMLElement | null>(null);
   const [taskCounter, setTaskCounter] = useState<number>(0);
+  const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
+  const [groupCount, setGroupCount] = useState(0);
+  const [userGroups, setUserGroups] = useState<UserGroup[]>([]);
+  const [groupAndSubgroupsPopUp, setGroupAndSubgroupsPopUp] = useState<GroupAndSubgroupsPopUp>(null);
+  const [groupPopup, setGroupPopup] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -116,7 +164,19 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         Node,
         setNode,
         taskCounter,
-        setTaskCounter
+        setTaskCounter,
+        groups,
+        setGroups,
+        groupCount,
+        setGroupCount,
+        userGroups,
+        setUserGroups,
+        groupAndSubgroupsPopUp,
+        setGroupAndSubgroupsPopUp,
+        groupPopup,
+        setGroupPopup,
+        groupId,
+        setGroupId
         }}>
         {children}
     </context.Provider>

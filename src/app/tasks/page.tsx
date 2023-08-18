@@ -29,16 +29,23 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
+        if(data.error == 'Unauthorized'){
+          toast.error('Your session has expired, please login again');
+          localStorage.removeItem('token');
+          setLoggedIn(false);
+        }
         setTasks(data)
-        console.log(data)
+        console.log('task page', data)
       }
       catch(error) {
+        console.log('hello error')
+        localStorage.removeItem('token');
         toast.error('Your session has expired, please login again');
         setLoggedIn(false);
       }
     }
     fetchData()
-  },[taskCounter, pathname])
+  },[taskCounter, pathname, setLoggedIn, setTasks, url])
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (
