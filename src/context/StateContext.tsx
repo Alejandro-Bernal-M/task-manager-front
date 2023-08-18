@@ -67,14 +67,14 @@ type GroupType = {
   id: string;
 }
 
-export interface Subgroup {
+export interface Subgroups {
   id: number;
   title: string;
 }
 
 interface GroupWithSubgroups {
   group: GroupType;
-  subgroups: Subgroup[];
+  subgroups: Subgroups[];
 }
 
 type UserGroup =  {

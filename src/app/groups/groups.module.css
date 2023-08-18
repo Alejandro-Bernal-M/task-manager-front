@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 10px;
   width: max(40%, 400px);
   border: 2px solid var(--color-1);
   border-radius: 10px;
@@ -66,6 +66,17 @@
   align-items: center;
   gap: 10px;
   width: 100%;
+  padding: 20px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.subGroupHolder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 60%;
   padding: 20px 0;
   overflow-y: auto;
   flex: 1;
