@@ -52,7 +52,7 @@ export default function Registration() {
     const password = passwordInput.value;
     const confirmPasswordInput = document.getElementById('confirmPassword') as HTMLInputElement;
     const confirmPassword = confirmPasswordInput.value;
-    if(name == '' || email == '' || password == '' || confirmPassword == '') return alert('Please fill all the fields')
+    if(name == '' || email == '' || password == '' || confirmPassword == '') return toast.error('Please fill all the fields')
     if(password !== confirmPassword) {
       toast.error('passwords do not match');
       return;
