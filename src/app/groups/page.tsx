@@ -82,7 +82,7 @@ const Groups = () => {
 
   fetchGroups();
   fetchUserGroups();
-  }, [setGroups, urlGroups, token, groupCount, urlUserGroups, setUserGroups])
+  }, [setGroups, urlGroups, token, groupCount, urlUserGroups, setUserGroups, setLoggedIn])
 
 
   const handleAddGroup = async() => {
