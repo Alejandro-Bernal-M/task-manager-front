@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 const Profile = () =>{
     const { setLoggedIn } = useStateContext();
     const [user, setUser] = useState({} as any);
-    const [invitations, setInvitations] = useState([] as any);
+    const [invitations, setInvitations] = useState({received: [], send: []} as any);
 
     let tokenString = localStorage.getItem('token') || '';
     if (!tokenString) {
@@ -33,7 +33,7 @@ const Profile = () =>{
               }
             });
             const data = await response.json();
-
+    
             if(data.status === 'SUCCESS'){
               setUser(data.data);
             }
@@ -62,10 +62,11 @@ const Profile = () =>{
             }
           })
           const data = await response.json();
-          console.log(data)
+
           if(data.status === 'SUCCESS'){
             setInvitations(data.data);
           }
+
         } catch (error) {
           console.log(error)
         }
@@ -78,15 +79,17 @@ const Profile = () =>{
     return(
       <div className={styles.container}>
         <h1>Your Profile</h1>
+        <div className={styles.userContainer}>
+            <p>Name:</p>
+            <p>{user.name}</p>
+            <p>Email:</p>
+            <p>{user.email}</p>
+            <button>Edit</button>
+        </div>
         <div className={styles.mainHolder}>
-          <div className={styles.userContainer}>
-              <p>Name: {user.name}</p>
-              <p>Email: {user.email}</p>
-              <button>Edit</button>
-          </div>
           <div className={styles.invitationsContainer}>
             <h2>Your Invitations</h2>
-            {invitations.length > 0 ? invitations.map((invitation: any) => (
+            {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
               <div key={invitation.id}>
                 <p>invited to:{invitation.subgroup}</p>
                 <p>invited by:</p>
@@ -94,6 +97,17 @@ const Profile = () =>{
                 <p>email: {invitation.invited_by.email}</p>
                 <button>Accept</button>
                 <button>Reject</button>
+              </div>
+                )) : <p>No Invitations</p>}
+          </div>
+          <div className={styles.invitationsContainer}>
+            <h2>Your Sent Invitations</h2>
+            {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
+              <div key={invitation.id}>
+                <p>invited to:{invitation.subgroup}</p>
+                <p>invited:</p>
+                <p>name: {invitation.invited.name}</p>
+                <p>email: {invitation.invited.email}</p>
               </div>
                 )) : <p>No Invitations</p>}
           </div>
