@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import { useEffect, useState } from 'react';
+import Invitation from '@/components/Invitation';
 
 const Profile = () =>{
     const { setLoggedIn } = useStateContext();
@@ -89,26 +90,17 @@ const Profile = () =>{
         <div className={styles.mainHolder}>
           <div className={styles.invitationsContainer}>
             <h2>Your Invitations</h2>
+            <hr />
+            <button className={styles.newInvitation}>New invitation +</button>
             {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
-              <div key={invitation.id}>
-                <p>invited to:{invitation.subgroup}</p>
-                <p>invited by:</p>
-                <p>name: {invitation.invited_by.name}</p>
-                <p>email: {invitation.invited_by.email}</p>
-                <button>Accept</button>
-                <button>Reject</button>
-              </div>
+              <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} />
                 )) : <p>No Invitations</p>}
           </div>
           <div className={styles.invitationsContainer}>
             <h2>Your Sent Invitations</h2>
+            <hr />
             {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
-              <div key={invitation.id}>
-                <p>invited to:{invitation.subgroup}</p>
-                <p>invited:</p>
-                <p>name: {invitation.invited.name}</p>
-                <p>email: {invitation.invited.email}</p>
-              </div>
+              <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} />
                 )) : <p>No Invitations</p>}
           </div>
         </div>
