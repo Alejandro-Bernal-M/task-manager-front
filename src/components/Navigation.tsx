@@ -26,7 +26,7 @@ const handleSignOut = () => {
         <ul>
           <li><Link href='/tasks' className={ pathname == '/tasks' ? styles.active : ''}>Tasks</Link></li>
           <li><Link href='/groups' className= {pathname == '/groups' ? styles.active : ' '}>Groups</Link> </li>
-          <li>Profile</li>
+          <li><Link href='/profile' className= {pathname == '/profile' ? styles.active : ' '}>Profile</Link> </li>
           <li><button onClick={handleSignOut}>Sign Out</button></li>
           </ul>
         }
