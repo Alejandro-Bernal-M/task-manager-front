@@ -50,6 +50,8 @@ type ContextType = {
   setGroupPopup: (groupPopup: boolean) => void;
   groupId: string;
   setGroupId: (groupId: string) => void;
+  invitationPopup: boolean;
+  setInvitationPopup: (invitationPopup: boolean) => void;
 };
 
 export type TaskType = {
@@ -117,6 +119,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [groupAndSubgroupsPopUp, setGroupAndSubgroupsPopUp] = useState<GroupAndSubgroupsPopUp>(null);
   const [groupPopup, setGroupPopup] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>('');
+  const [invitationPopup, setInvitationPopup] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -176,7 +179,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         groupPopup,
         setGroupPopup,
         groupId,
-        setGroupId
+        setGroupId,
+        invitationPopup,
+        setInvitationPopup
         }}>
         {children}
     </context.Provider>

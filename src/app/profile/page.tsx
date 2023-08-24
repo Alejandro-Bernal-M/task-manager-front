@@ -6,9 +6,10 @@ import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import { useEffect, useState } from 'react';
 import Invitation from '@/components/Invitation';
+import InvitationPopup from '@/components/InvitationPopup';
 
 const Profile = () =>{
-  const { setLoggedIn } = useStateContext();
+  const { setLoggedIn, invitationPopup, setInvitationPopup } = useStateContext();
   const [user, setUser] = useState({} as any);
   const [invitations, setInvitations] = useState({received: [], send: []} as any);
   const [edit, setEdit] = useState(false);
@@ -138,8 +139,13 @@ const Profile = () =>{
     editUser();
   }
 
+  const handleNewInvitation = () => {
+    setInvitationPopup(!invitationPopup);
+  }
+
   return(
     <div className={styles.container}>
+      {invitationPopup && <InvitationPopup />}
       <h1>Your Profile</h1>
       <div className={styles.userContainer}>
           <p>Name:</p>
@@ -158,7 +164,7 @@ const Profile = () =>{
         <div className={styles.invitationsContainer}>
           <h2>Your Invitations</h2>
           <hr />
-          <button className={styles.newInvitation}>New invitation +</button>
+          <button className={styles.newInvitation} onClick={handleNewInvitation}>New invitation +</button>
           {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
             <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} />
               )) : <p>No Invitations</p>}
