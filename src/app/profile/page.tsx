@@ -23,9 +23,9 @@ const Profile = () =>{
     setLoggedIn(false);
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
-    tokenString = '';
+    tokenString = JSON.stringify('');
   }
-  const token = JSON.parse(tokenString);
+  const token = JSON.parse(tokenString) || '';
   const userId = localStorage.getItem('user_id') || '';
   const urlUser = api.user(userId);
   useEffect(() => {
@@ -44,8 +44,7 @@ const Profile = () =>{
             setUser(data.data);
             console.log(user);
             setName(data.data.name);
-            console.log(name)
-            setEmail(user.email);
+            setEmail(data.data.email);
           }
           if(data.error == 'Unauthorized'){
             toast.error('Your session has expired, please login again');
@@ -147,7 +146,7 @@ const Profile = () =>{
           {!edit &&  <p>{name}</p>}
           {edit &&  <input  defaultValue={name} onChange={(e) => setName(e.target.value)}></input>}
           <p>Email:</p>
-          {!edit && <p>{user.email}</p>}
+          {!edit && <p>{email}</p>}
           {edit &&  <input defaultValue={email} onChange={(e) => setEmail(e.target.value)}></input>}
           {edit && <p>Password: <i>Leave it blank if you don&apos;t want to chage it.</i></p>}
           {edit && <input type="password" placeholder='New password' onChange={(e) => setPassword(e.target.value)}/>}

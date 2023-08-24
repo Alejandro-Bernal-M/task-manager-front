@@ -28,7 +28,7 @@ const Groups = () => {
     setLoggedIn(false);
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
-    tokenString = '';
+    tokenString = JSON.stringify('');
   }
   const token = JSON.parse(tokenString);
 
