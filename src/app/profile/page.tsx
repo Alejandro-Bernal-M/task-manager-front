@@ -121,6 +121,8 @@ const Profile = () =>{
           setName(data.data.name);
           setEmail(data.data.email);
           setEdit(!edit);
+          setPassword('');
+          setConfirm('');
         }
         if(data.error == 'Unauthorized'){
           setEdit(!edit);
