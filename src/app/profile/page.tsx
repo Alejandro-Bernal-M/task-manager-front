@@ -167,14 +167,14 @@ const Profile = () =>{
           <button className={styles.newInvitation} onClick={handleNewInvitation}>New invitation +</button>
           {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
             <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} />
-              )) : <p>No Invitations</p>}
+              )) : <p className={styles.noInvitation}>No Invitations</p>}
         </div>
         <div className={styles.invitationsContainer}>
           <h2>Your Sent Invitations</h2>
           <hr />
           {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
             <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} />
-              )) : <p>No Invitations</p>}
+              )) : <p className={styles.noInvitation}>No Invitations</p>}
         </div>
       </div>
     </div>

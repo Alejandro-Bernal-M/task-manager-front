@@ -105,6 +105,13 @@
   border: 1px solid var(--color-1);
 }
 
+.noInvitation {
+  font-size: 1rem;
+  color: var(--color-1);
+  text-align: center;
+  width: 100%;
+}
+
 .newInvitation {
   font-size: 1rem;
   width: 100%;
