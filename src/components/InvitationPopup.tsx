@@ -4,11 +4,17 @@ import { useState } from 'react';
 import React from 'react';
 
 const InvitationPopup = () => {
-  const { setInvitationPopup, allUsers } = useStateContext();
+  const { setInvitationPopup, allUsers, groups } = useStateContext();
   console.log(allUsers)
+  console.log(groups)
+
+  const subgroups : any = []
+
+  groups.forEach(group => {group.subgroups.forEach(subgroup => subgroups.push(subgroup))})
+  console.log('subs', subgroups)
   const [user, setUser] = useState({} as any)
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setUser(e.target.value);
     console.log(e.target.value);
@@ -27,10 +33,16 @@ const InvitationPopup = () => {
         </div>
         <div className={styles.popupBody}>
           <form>
-            <select id='emailOption' name='email' onChange={handleChange}>
-              <option value=''>Select User</option>
+            <p>Select the user:</p>
+            <select id='emailOption' name='email' onChange={handleEmailChange}>
               {allUsers.map((user:any) => (
                 <option key={user.id} value={user.id} >{user.email}</option>
+              ))}
+            </select>
+            <p>Select the Subgroup: </p>
+            <select id='subgroupOption' name='subgroup'>
+              {subgroups.map((subgroup:any) => (
+                <option key={subgroup.id} value={subgroup.id} >{subgroup.title}</option>
               ))}
             </select>
             <button onClick={handleSend}>Send</button>
