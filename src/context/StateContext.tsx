@@ -1,12 +1,14 @@
 'use client'
 import { useContext, createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter, usePathname  } from 'next/navigation'
+import api from "@/utils/common";
 
 const context = createContext<ContextType>({} as ContextType);
 
 interface User {
   name: string;
   email: string;
+  id: string;
 }
 
 type ContextType = {
@@ -52,6 +54,8 @@ type ContextType = {
   setGroupId: (groupId: string) => void;
   invitationPopup: boolean;
   setInvitationPopup: (invitationPopup: boolean) => void;
+  allUsers: User[];
+  setAllUsers: (allUsers: User[]) => void;
 };
 
 export type TaskType = {
@@ -98,7 +102,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
   const [user, setUser] = useState<User>({
     name: 'John Doe',
-    email: 'test@test.com'
+    email: 'test@test.com',
+    id: '1'
   });
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -120,6 +125,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [groupPopup, setGroupPopup] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>('');
   const [invitationPopup, setInvitationPopup] = useState<boolean>(false);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -127,7 +133,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       setToken(token);
       setLoggedIn(true);
     }
-  }, [loggedIn]);
+  }, [loggedIn, token]);
 
   useEffect(() => {
     if (!loggedIn) {
@@ -181,7 +187,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         groupId,
         setGroupId,
         invitationPopup,
-        setInvitationPopup
+        setInvitationPopup,
+        allUsers,
+        setAllUsers
         }}>
         {children}
     </context.Provider>

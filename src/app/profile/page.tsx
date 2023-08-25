@@ -9,7 +9,7 @@ import Invitation from '@/components/Invitation';
 import InvitationPopup from '@/components/InvitationPopup';
 
 const Profile = () =>{
-  const { setLoggedIn, invitationPopup, setInvitationPopup } = useStateContext();
+  const { setLoggedIn, invitationPopup, setInvitationPopup, setAllUsers, allUsers } = useStateContext();
   const [user, setUser] = useState({} as any);
   const [invitations, setInvitations] = useState({received: [], send: []} as any);
   const [edit, setEdit] = useState(false);
@@ -27,9 +27,10 @@ const Profile = () =>{
     tokenString = JSON.stringify('');
   }
   const token = JSON.parse(tokenString) || '';
-  const userId = localStorage.getItem('user_id') || '';
-  const urlUser = api.user(userId);
+  
   useEffect(() => {
+    const userId = localStorage.getItem('user_id') || '';
+    const urlUser = api.user(userId);
       const fetchUser = async () => {
         try{
           const response = await fetch(urlUser, {
@@ -43,7 +44,6 @@ const Profile = () =>{
   
           if(data.status === 'SUCCESS'){
             setUser(data.data);
-            console.log(user);
             setName(data.data.name);
             setEmail(data.data.email);
           }
@@ -63,6 +63,7 @@ const Profile = () =>{
       }
     }
     fetchUser();
+
     const fetchInvitations = async () => {
       try {
         const response = await fetch(api.invitations(userId), {
@@ -83,9 +84,32 @@ const Profile = () =>{
       }
     }
     fetchInvitations();
-  }, [setLoggedIn, token, urlUser, userId]);
+
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch(api.users, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        })
+        const data = await response.json();
+
+        if(data.status === 'SUCCESS'){
+          setAllUsers(data.data);
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchAllUsers();
+    
+  }, [setLoggedIn, token, setAllUsers]);
 
   const handleEdit = () => {
+    const userId = localStorage.getItem('user_id') || '';
     const url = api.user(userId);
     if(password !== confirm){
       toast.error('Passwords do not match');
