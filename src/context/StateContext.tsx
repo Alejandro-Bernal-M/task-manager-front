@@ -143,6 +143,38 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
   }, [loggedIn, pathname, router]);
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('token') || '');
+
+    const userId = localStorage.getItem('user_id') || '';
+    const urlGroups = api.groups(userId);
+    const urlUserGroups = api.userGroups(userId);
+    const fetchGroups = async () => {
+      try{
+        const response = await fetch(urlGroups, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        });
+        const data = await response.json();
+        if(data.status === 'SUCCESS'){
+          setGroups(data.data);
+        }
+        // if(data.error == 'Unauthorized'){
+        //   toast.error('Your session has expired, please login again');
+        //   localStorage.removeItem('token');
+        //   localStorage.removeItem('user_id');
+        //   setLoggedIn(false);
+        // }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  fetchGroups();
+  }, [groupCount])
   return (
     <context.Provider
       value={{
