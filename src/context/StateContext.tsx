@@ -58,6 +58,10 @@ type ContextType = {
   setAllUsers: (allUsers: User[]) => void;
   invitations: any;
   setInvitations: (invitations: any) => void;
+  userInvitation: string;
+  setUserInvitation: (userInvitation: string) => void;
+  subgroupInvitation: string;
+  setSubgroupInvitation: (subgroupInvitation: string) => void;
 };
 
 export type TaskType = {
@@ -129,6 +133,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [invitationPopup, setInvitationPopup] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [invitations, setInvitations] = useState({received: [], send: []} as any);
+  const [userInvitation, setUserInvitation] = useState('');
+  const [subgroupInvitation, setSubgroupInvitation] = useState('');
 
   useEffect(() => {
     const getToken = localStorage.getItem('token');
@@ -240,7 +246,11 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         allUsers,
         setAllUsers,
         invitations,
-        setInvitations
+        setInvitations,
+        userInvitation,
+        setUserInvitation,
+        subgroupInvitation,
+        setSubgroupInvitation
         }}>
         {children}
     </context.Provider>
