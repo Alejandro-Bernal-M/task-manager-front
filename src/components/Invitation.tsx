@@ -1,6 +1,8 @@
 import styles from './invitation.module.css'
+import api from '@/utils/common'
 
 const Invitation = ({send, subgroup, name, email, status}: {send: boolean, subgroup:string, name: string, email:string, status:string}) => {
+
     return (
         <div className={styles.invitation}>
            <p>Invited to: {subgroup}</p>
