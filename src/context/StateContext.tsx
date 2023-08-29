@@ -56,6 +56,8 @@ type ContextType = {
   setInvitationPopup: (invitationPopup: boolean) => void;
   allUsers: User[];
   setAllUsers: (allUsers: User[]) => void;
+  invitations: any;
+  setInvitations: (invitations: any) => void;
 };
 
 export type TaskType = {
@@ -126,6 +128,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [groupId, setGroupId] = useState<string>('');
   const [invitationPopup, setInvitationPopup] = useState<boolean>(false);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [invitations, setInvitations] = useState({received: [], send: []} as any);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -174,7 +177,28 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
   }
   fetchGroups();
+  const fetchInvitations = async () => {
+    try {
+      const response = await fetch(api.invitations(userId), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+      const data = await response.json();
+
+      if(data.status === 'SUCCESS'){
+        setInvitations(data.data);
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  fetchInvitations();
   }, [groupCount])
+
   return (
     <context.Provider
       value={{
@@ -221,7 +245,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         invitationPopup,
         setInvitationPopup,
         allUsers,
-        setAllUsers
+        setAllUsers,
+        invitations,
+        setInvitations
         }}>
         {children}
     </context.Provider>

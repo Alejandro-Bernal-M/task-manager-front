@@ -9,9 +9,8 @@ import Invitation from '@/components/Invitation';
 import InvitationPopup from '@/components/InvitationPopup';
 
 const Profile = () =>{
-  const { setLoggedIn, invitationPopup, setInvitationPopup, setAllUsers, allUsers } = useStateContext();
+  const { setLoggedIn, invitationPopup, setInvitationPopup, setAllUsers, allUsers, invitations } = useStateContext();
   const [user, setUser] = useState({} as any);
-  const [invitations, setInvitations] = useState({received: [], send: []} as any);
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,27 +62,6 @@ const Profile = () =>{
       }
     }
     fetchUser();
-
-    const fetchInvitations = async () => {
-      try {
-        const response = await fetch(api.invitations(userId), {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-          }
-        })
-        const data = await response.json();
-
-        if(data.status === 'SUCCESS'){
-          setInvitations(data.data);
-        }
-
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchInvitations();
 
     const fetchAllUsers = async () => {
       try {
