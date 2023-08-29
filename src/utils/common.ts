@@ -10,7 +10,8 @@ const api= {
   specificSubgroup: (user_id : string, group_id : string, subgroup_id : string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/groups/${group_id}/subgroups/${subgroup_id}`, // DELETE for delete subgroup and PATCH for update subgroup
   userGroups: (user_id : string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/usergroups`, // GET for all userGroups, POST for create userGroup
   invitations:(user_id :string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/invitations`, // GET for all invitations, POST for create invitation
-  specificInvitation: (user_id:string, invitation_id: string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/invitations/${invitation_id}` // PUT and DELETE
+  specificInvitation: (user_id:string, invitation_id: string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/invitations/${invitation_id}`, // PUT and DELETE
+  assignments:(user_id:string) => `${process.env.NEXT_PUBLIC_API}users/${user_id}/assignments`, // GET for all the assingments, POST for create Assingments
 }
 
 export default api
