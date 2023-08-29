@@ -5,11 +5,10 @@ import { useStateContext } from '@/context/StateContext'
 
 
 const Invitation = ({send, subgroup, name, email, status, id}: {send: boolean, subgroup:string, name: string, email:string, status:string, id:string}) => {
-    const {setGroupCount, groupCount} = useStateContext();
+    const {setGroupCount, groupCount, setLoggedIn, token} = useStateContext();
+    const userId = localStorage.getItem('user_id') || '';
+    const urlSpecificInvitation = api.specificInvitation(userId, id);
     const handleCancel = async() => {
-        const token = JSON.parse(localStorage.getItem('token')||'');
-        const userId = localStorage.getItem('user_id') || '';
-        const urlSpecificInvitation = api.specificInvitation(userId, id);
 
         try {
             const response = await fetch(urlSpecificInvitation, {
@@ -20,10 +19,47 @@ const Invitation = ({send, subgroup, name, email, status, id}: {send: boolean, s
             })
             const data = await response.json();
             if(data.status == 'SUCCESS') toast.success(data.message)
-            setGroupCount(groupCount + 1)
-        } catch (error) {
-            
+            if(data.error == 'Unauthorized'){
+                toast.error('Your session has expired, please login again');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_id');
+                setLoggedIn(false);
+                }
+                setGroupCount(groupCount + 1)
+            } catch (error) {
+                
+            }
+            }
+    
+    const handleReject = async() => {
+        console.log('reject')
+        const dataToChange = {
+            invitation: {
+                status: 'Rejected'
+            }
         }
+        try {const response = await fetch(urlSpecificInvitation, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization': token
+            },
+            body: JSON.stringify(dataToChange)
+        })
+        const data = await response.json()
+        if (data.status == 'SUCCESS') toast.success(data.message)
+        if (data.status == 'ERROR') toast.error(data.message)
+        if(data.error == 'Unauthorized'){
+            toast.error('Your session has expired, please login again');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user_id');
+            setLoggedIn(false);
+        }
+        setGroupCount(groupCount - 1)
+    } catch(error){
+    console.log(error)
+    }
+    
     }
     return (
         <div className={styles.invitation}>
@@ -33,10 +69,10 @@ const Invitation = ({send, subgroup, name, email, status, id}: {send: boolean, s
             <p>Email: {email}</p>
             {!send && <div className={styles.buttonsHolder}>
                 <button>Accept</button>
-                <button>Reject</button>
+                <button onClick={handleReject}>Reject</button>
             </div>}
             {send && <p>Status: {status}</p>}
-            {send && <button onClick={handleCancel}>Cancel</button>}
+            {send && <button onClick={handleCancel}>{status !=='accepted' ? 'Cancel' : 'Delete register'}</button>}
         </div>
     )
 }

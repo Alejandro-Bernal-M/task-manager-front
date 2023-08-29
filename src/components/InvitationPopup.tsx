@@ -34,7 +34,7 @@ const InvitationPopup = () => {
         user_id: user,
         subgroup_id: subgroup,
         author_id: author_id ,
-        status: 'pending'
+        status: 'Pending'
       }
     };
 

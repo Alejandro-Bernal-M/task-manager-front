@@ -131,13 +131,13 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [invitations, setInvitations] = useState({received: [], send: []} as any);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setToken(token);
+    const getToken = localStorage.getItem('token');
+    if (getToken) {
+      setToken(JSON.parse(getToken));
       setLoggedIn(true);
     }
   }, [loggedIn, token]);
-
+  
   useEffect(() => {
     if (!loggedIn) {
       if (pathname !== '/registration' && pathname !== '/') {
@@ -145,9 +145,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       }
     }
   }, [loggedIn, pathname, router]);
-
+  
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token') || '');
 
     const userId = localStorage.getItem('user_id') || '';
     const urlGroups = api.groups(userId);
@@ -191,7 +190,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
   }
   fetchInvitations();
-  }, [groupCount])
+  }, [groupCount, token])
 
   return (
     <context.Provider
