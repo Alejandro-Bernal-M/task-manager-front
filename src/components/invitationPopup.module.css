@@ -66,6 +66,10 @@
   align-items: center;
 }
 
+.popupBody form p {
+  color: var(--color-1)
+}
+
 .popupBody form input,
 .popupBody form select {
   width: 100%;

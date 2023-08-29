@@ -1,28 +1,24 @@
 import styles from './invitationPopup.module.css'
 import { useStateContext } from '@/context/StateContext';
-import { useState } from 'react';
 import React from 'react';
 import api from '@/utils/common';
 import { toast } from 'react-hot-toast';
 
 const InvitationPopup = () => {
-  const { setInvitationPopup, allUsers, groups, setGroupCount, groupCount } = useStateContext();
+  const { setInvitationPopup, allUsers, groups, setGroupCount, groupCount,userInvitation, setUserInvitation, subgroupInvitation, setSubgroupInvitation } = useStateContext();
 
   const subgroups : any = []
 
   groups.forEach(group => {group.subgroups.forEach(subgroup => subgroups.push(subgroup))})
 
-  const [user, setUser] = useState({} as any)
-  const [subgroup, setSubgroup] = useState('')
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
-    setUser(e.target.value);
+    setUserInvitation(e.target.value);
   }
 
   const handleSubgroupChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
-    setSubgroup(e.target.value)
+    setSubgroupInvitation(e.target.value)
   }
 
   const handleSend = async(e: React.MouseEvent) => {
@@ -31,8 +27,8 @@ const InvitationPopup = () => {
     const token = localStorage.getItem('token') || '';
     let dataToSend = {
       invitation: {
-        user_id: user,
-        subgroup_id: subgroup,
+        user_id: userInvitation,
+        subgroup_id: subgroupInvitation,
         author_id: author_id ,
         status: 'Pending'
       }

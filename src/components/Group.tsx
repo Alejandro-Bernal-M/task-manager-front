@@ -6,8 +6,7 @@ import { Subgroups } from '@/context/StateContext';
 import  Subgroup  from '@/components/Subgroup';
 
 const Group = ({title, description, id, subGroups}:{title:string, description:string, id:string, subGroups:Subgroups[]}) => {
-  const { setGroupCount, groupCount, setGroupAndSubgroupsPopUp, setGroupPopup, setGroupId } = useStateContext();
-  const token = JSON.parse(localStorage.getItem('token') ||'');
+  const { setGroupCount, groupCount, setGroupAndSubgroupsPopUp, setGroupPopup, setGroupId, token } = useStateContext();
   const user_id = JSON.parse(localStorage.getItem('user_id') ||'');
   const urlSpecificGroup = api.specificGroup(user_id, id);
 

@@ -20,18 +20,9 @@ const Groups = () => {
           groupAndSubgroupsPopUp,
           setGroupAndSubgroupsPopUp,
           groupPopup,
-          setGroupPopup
+          setGroupPopup,
+          token
         } = useStateContext();
-    
-  let tokenString = localStorage.getItem('token') || '';
-  if (!tokenString) {
-    toast.error('Your session has expired, please login again');
-    setLoggedIn(false);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user_id');
-    tokenString = JSON.stringify('');
-  }
-  const token = JSON.parse(tokenString);
 
   const userId = localStorage.getItem('user_id') || '';
   const urlGroups = api.groups(userId);
