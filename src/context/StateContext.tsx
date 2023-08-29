@@ -165,12 +165,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
         }
-        // if(data.error == 'Unauthorized'){
-        //   toast.error('Your session has expired, please login again');
-        //   localStorage.removeItem('token');
-        //   localStorage.removeItem('user_id');
-        //   setLoggedIn(false);
-        // }
     }
     catch(error){
       console.log(error);

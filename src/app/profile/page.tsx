@@ -17,17 +17,9 @@ const Profile = () =>{
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  let tokenString = localStorage.getItem('token') || '';
-  if (!tokenString) {
-    toast.error('Your session has expired, please login again');
-    setLoggedIn(false);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user_id');
-    tokenString = JSON.stringify('');
-  }
-  const token = JSON.parse(tokenString) || '';
   
   useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('token') || '');
     const userId = localStorage.getItem('user_id') || '';
     const urlUser = api.user(userId);
       const fetchUser = async () => {
@@ -84,9 +76,10 @@ const Profile = () =>{
     }
     fetchAllUsers();
     
-  }, [setLoggedIn, token, setAllUsers]);
+  }, [setLoggedIn, setAllUsers]);
 
   const handleEdit = () => {
+    const token = JSON.parse(localStorage.getItem('token') || '');
     const userId = localStorage.getItem('user_id') || '';
     const url = api.user(userId);
     if(password !== confirm){
@@ -168,14 +161,14 @@ const Profile = () =>{
           <hr />
           <button className={styles.newInvitation} onClick={handleNewInvitation}>New invitation +</button>
           {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
-            <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} />
+            <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} id={invitation.id} />
               )) : <p className={styles.noInvitation}>No Invitations</p>}
         </div>
         <div className={styles.invitationsContainer}>
           <h2>Your Sent Invitations</h2>
           <hr />
           {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
-            <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} />
+            <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} id={invitation.id} />
               )) : <p className={styles.noInvitation}>No Invitations</p>}
         </div>
       </div>

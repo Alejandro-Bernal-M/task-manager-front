@@ -85,8 +85,6 @@ const Groups = () => {
   fetchUserGroups();
   }, [setGroups, urlGroups, token, groupCount, urlUserGroups, setUserGroups, setLoggedIn])
 
-  setGroupCount(groupCount + 1);
-
   const handleAddGroup = async() => {
     setGroupAndSubgroupsPopUp({
       popupTitle: 'Add Group',
