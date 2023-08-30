@@ -56,6 +56,7 @@
 .assignDiv div {
   width: 50%;
   height: auto;
+  min-height: 30px;
 }
 
 @keyframes grabbingAnimation {
