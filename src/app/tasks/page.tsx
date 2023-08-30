@@ -52,13 +52,11 @@ const Tasks = () => {
   const handleGroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setGroupSelect(e.target.value)
-    console.log(groupSelect)
   }
 
   const handleSubgroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setSubgroupSelect(e.target.value)
-    console.log(e.target.value)
   }
 
   useEffect(()=>{
