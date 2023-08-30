@@ -198,6 +198,30 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   fetchInvitations();
   }, [groupCount, token])
 
+  useEffect(()=> {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch(api.users, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        })
+        const data = await response.json();
+
+        if(data.status === 'SUCCESS'){
+          setAllUsers(data.data);
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchAllUsers();
+
+  },[setAllUsers, setLoggedIn, token])
+
   return (
     <context.Provider
       value={{
