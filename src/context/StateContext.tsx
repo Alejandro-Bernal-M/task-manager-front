@@ -62,6 +62,10 @@ type ContextType = {
   setUserInvitation: (userInvitation: string) => void;
   subgroupInvitation: string;
   setSubgroupInvitation: (subgroupInvitation: string) => void;
+  subgroupSelect: string;
+  setSubgroupSelect: (subgroupSelect: string) => void;
+  filteredSubgroup: string;
+  setFilteredSubgroup: (filteredSubgroup: string) => void;
 };
 
 export type TaskType = {
@@ -70,6 +74,7 @@ export type TaskType = {
   status: string;
   id: string;
   order: number;
+  subgroup_id: string;
 };
 
 type GroupType = {
@@ -135,6 +140,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [invitations, setInvitations] = useState({received: [], send: []} as any);
   const [userInvitation, setUserInvitation] = useState('');
   const [subgroupInvitation, setSubgroupInvitation] = useState('');
+  const [subgroupSelect, setSubgroupSelect] = useState('')
+  const [filteredSubgroup, setFilteredSubgroup] = useState('');
 
   useEffect(() => {
     const getToken = localStorage.getItem('token');
@@ -274,7 +281,11 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         userInvitation,
         setUserInvitation,
         subgroupInvitation,
-        setSubgroupInvitation
+        setSubgroupInvitation,
+        subgroupSelect,
+        setSubgroupSelect,
+        filteredSubgroup,
+        setFilteredSubgroup
         }}>
         {children}
     </context.Provider>

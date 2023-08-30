@@ -10,10 +10,15 @@ type TaskPopupProps = {
 }
 
 const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
-  const { setShowPopup,loggedIn, setLoggedIn, taskCounter, setTaskCounter } = useStateContext();
+  const { setShowPopup,loggedIn, setLoggedIn, taskCounter, setTaskCounter, filteredSubgroup, subgroupSelect  } = useStateContext();
 
   const handleCreateTask = async(e:React.MouseEvent) => {
     e.preventDefault();
+    if(filteredSubgroup == 'No subgroup selected'){
+      toast.error('You should select a subgroup first')
+      setShowPopup(false)
+      return
+    }
     const title = (document.getElementById('taskName') as HTMLInputElement).value;
     const description = (document.getElementById('taskDescription') as HTMLInputElement).value;
     if (title === '' || description === '') {
@@ -26,7 +31,8 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
         description: description,
         status: status,
         author_id: localStorage.getItem('user_id') || '',
-        order: 0
+        order: 0,
+        subgroup_id: subgroupSelect
       }
     }
 
@@ -47,11 +53,9 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
         toast.error('Your session has expired, please login again');
         localStorage.removeItem('token');
         setLoggedIn(false);
-        console.log(loggedIn)
       }else {
         toast.success('Task created successfully');
       }
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +73,7 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
       <div className={styles.popupContent}>
         <div className={styles.popupHeader}>
           <span onClick={() => setShowPopup(false)} className="close">&times;</span>
-          <h2>Add Task</h2>
+          <h2>Add Task for {filteredSubgroup}</h2>
         </div>
         <div className={styles.popupBody}>
           <form>

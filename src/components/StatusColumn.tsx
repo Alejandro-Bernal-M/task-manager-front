@@ -11,7 +11,7 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn, taskCounter, setTaskCounter } = useStateContext();
+  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn, subgroupSelect, token} = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -20,14 +20,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
 
   const handleDrop = async(ev: React.DragEvent<HTMLDivElement>) => {
     ev.preventDefault();
-    const tokenString = localStorage.getItem('token');
-    if (!tokenString) {
-      toast.error('Your session has expired, please login again');
-      setLoggedIn(false);
-      return;
-    }
-    let token = JSON.parse(tokenString);
-    
     const userId = localStorage.getItem('user_id') || '';
     if (!draggedTask) return;
     const url = api.Task(userId, draggedTask?.id);
@@ -85,15 +77,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
   }
   
   const swapTasksPositionsApi = async ({task1, task2} :{task1: TaskType, task2: TaskType}) => {
-    const tokenString = localStorage.getItem('token');
-    if (!tokenString) {
-      toast.error('Your session has expired, please login again');
-      setLoggedIn(false);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user_id');
-      return;
-    }
-    let token = JSON.parse(tokenString);
     const userId = localStorage.getItem('user_id') || '';
     const url1 = api.Task(userId, task1.id);
     const url2 = api.Task(userId, task2.id);
@@ -157,7 +140,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       <button className={styles.addTask} onClick={handleAddTask}>Add Task +</button>
       <div className={styles.tasksColumn} id={title}>
         { tasks.length > 0 && tasks.map((task, index) => (
-          task.status == title && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id}/>
+          task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id}/>
         ))}
       </div>
     </div>

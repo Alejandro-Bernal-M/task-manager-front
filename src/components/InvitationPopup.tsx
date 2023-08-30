@@ -8,7 +8,7 @@ const InvitationPopup = () => {
   const { setInvitationPopup, allUsers, groups, setGroupCount, groupCount,userInvitation, setUserInvitation, subgroupInvitation, setSubgroupInvitation } = useStateContext();
 
   const subgroups : any = []
-
+  
   groups.forEach(group => {group.subgroups.forEach(subgroup => subgroups.push(subgroup))})
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
