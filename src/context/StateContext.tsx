@@ -75,6 +75,7 @@ export type TaskType = {
   id: string;
   order: number;
   subgroup_id: string;
+  author_id: string;
 };
 
 type GroupType = {

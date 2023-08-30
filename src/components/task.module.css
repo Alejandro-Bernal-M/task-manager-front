@@ -55,6 +55,7 @@
 .assignDiv button,
 .assignDiv div {
   width: 50%;
+  height: auto;
 }
 
 @keyframes grabbingAnimation {

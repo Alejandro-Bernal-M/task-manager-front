@@ -142,7 +142,7 @@ const Task = ({title, description, status, id, authorId}: TaskProps) => {
       <p>{description}</p>
       <button onClick={handleDeleteTasks}>Delete</button>
       <div className={styles.assignDiv}>
-        <button>Assign task</button>
+        {authorId == user.id && <button>Assign task</button>}
         <div>
           <p>assigneds: </p>
         </div>
