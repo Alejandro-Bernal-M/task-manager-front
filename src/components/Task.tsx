@@ -149,6 +149,12 @@ const Task = ({title, description, status, id}: TaskProps) => {
       <h3>{title}</h3>
       <p>{description}</p>
       <button onClick={handleDeleteTasks}>Delete</button>
+      <div className={styles.assignDiv}>
+        <button>Assign task</button>
+        <div>
+          <p>assigneds: </p>
+        </div>
+      </div>
     </div>
   )
 }

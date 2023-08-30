@@ -47,6 +47,16 @@
   animation: grabbingAnimation 0.5s infinite alternate;
 }
 
+.assignDiv {
+  width: 100%;
+  display: flex;
+}
+
+.assignDiv button,
+.assignDiv div {
+  width: 50%;
+}
+
 @keyframes grabbingAnimation {
   0% {
     cursor: grabbing;
@@ -57,3 +67,4 @@
   }
 
 }
+
