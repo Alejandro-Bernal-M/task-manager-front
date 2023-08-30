@@ -9,53 +9,18 @@ import Invitation from '@/components/Invitation';
 import InvitationPopup from '@/components/InvitationPopup';
 
 const Profile = () =>{
-  const { setLoggedIn, invitationPopup, setInvitationPopup, setAllUsers, token, invitations } = useStateContext();
-  const [user, setUser] = useState({} as any);
+  const { setLoggedIn, invitationPopup, setInvitationPopup,user, setAllUsers, token, invitations } = useStateContext();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  
-  useEffect(() => {
-    const userId = localStorage.getItem('user_id') || '';
-    const urlUser = api.user(userId);
-      const fetchUser = async () => {
-        try{
-          const response = await fetch(urlUser, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': token
-            }
-          });
-          const data = await response.json();
-  
-          if(data.status === 'SUCCESS'){
-            setUser(data.data);
-            setName(data.data.name);
-            setEmail(data.data.email);
-          }
-          if(data.error == 'Unauthorized'){
-            toast.error('Your session has expired, please login again');
-            localStorage.removeItem('token');
-            localStorage.removeItem('user_id');
-            setLoggedIn(false);
-            return;
-          }
-      }
-      catch(error){
-        toast.error('Your session has expired, please login again');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_id');
-        setLoggedIn(false);
-      }
-    }
-    fetchUser();
-
+useEffect(() => {
+  setName(user.name);
+  setEmail(user.email);
+}, [user])
     
-  }, [setLoggedIn, setAllUsers, token]);
 
   const handleEdit = () => {
     const token = JSON.parse(localStorage.getItem('token') || '');

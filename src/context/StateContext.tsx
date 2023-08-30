@@ -149,7 +149,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       setToken(JSON.parse(getToken));
       setLoggedIn(true);
     }
-  }, [loggedIn, token]);
+  }, [loggedIn, token, pathname]);
   
   useEffect(() => {
     if (!loggedIn) {
@@ -163,7 +163,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
     const userId = localStorage.getItem('user_id') || '';
     const urlGroups = api.groups(userId);
-    const urlUserGroups = api.userGroups(userId);
     const fetchGroups = async () => {
       try{
         const response = await fetch(urlGroups, {
@@ -227,7 +226,33 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
     fetchAllUsers();
 
-  },[setAllUsers, setLoggedIn, token])
+  },[setAllUsers, token])
+
+  useEffect(() => {
+    const userId = localStorage.getItem('user_id') || '';
+    const urlUser = api.user(userId);
+      const fetchUser = async () => {
+        try{
+          const response = await fetch(urlUser, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': token
+            }
+          });
+          const data = await response.json();
+  
+          if(data.status === 'SUCCESS'){
+            setUser(data.data);
+          }
+        }
+        catch(error){
+          console.log(error)
+        }
+      }
+      fetchUser();
+      
+    }, [ token]);
 
   return (
     <context.Provider

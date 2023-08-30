@@ -130,7 +130,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
  
   }
 
-
   return (
     <div className={styles.column}
       onDrop={handleDrop}
@@ -140,7 +139,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       <button className={styles.addTask} onClick={handleAddTask}>Add Task +</button>
       <div className={styles.tasksColumn} id={title}>
         { tasks.length > 0 && tasks.map((task, index) => (
-          task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id}/>
+          task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id}/>
         ))}
       </div>
     </div>

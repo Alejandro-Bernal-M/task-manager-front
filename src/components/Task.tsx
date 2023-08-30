@@ -10,13 +10,13 @@ type TaskProps = {
   title: string,
   description: string,
   status: string,
-  id: string
+  id: string,
+  authorId: string
 }
 
-const Task = ({title, description, status, id}: TaskProps) => {
+const Task = ({title, description, status, id, authorId}: TaskProps) => {
   const { tasks,
           taskCounter,
-          setLoggedIn,
           setTaskCounter,
           setDraggedTask,
           mousePosition,
@@ -29,22 +29,14 @@ const Task = ({title, description, status, id}: TaskProps) => {
           nextSiblingPosition,
           setPreviousSiblingPosition,
           setNextSiblingPosition,
-          idToChange,
           setIdToChange,
           Node,
-          setNode
+          setNode,
+          user,
+          token
         } = useStateContext();
 
   const handleDeleteTasks = async() => {
-    const tokenString = localStorage.getItem('token');
-    if (!tokenString) {
-      toast.error('Your session has expired, please login again');
-      setLoggedIn(false);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user_id');
-      return;
-    }
-    let token = JSON.parse(tokenString);
     
     const userId = localStorage.getItem('user_id') || '';
     const url = api.Task(userId, id);
