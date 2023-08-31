@@ -161,7 +161,6 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
     }
   }
   
-  console.log(allUsers)
   return (
     <div className={styles.taskCard}
       id= {id}
@@ -178,21 +177,20 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
       <p>{description}</p>
       <button onClick={handleDeleteTasks}>Delete</button>
       <div className={styles.assignDiv}>
-        {authorId == user.id && <button onClick={() => setShowSubgroupUsers(!showSubgroupUsers)}>Assign task</button>}
+        {authorId == user.id && <button onClick={() => setShowSubgroupUsers(!showSubgroupUsers)}>Assign menu</button>}
         <div>
           <p>assigneds: </p>
           {assigneds.map((assigned:any) => {
               let user = allUsers.filter((user) => user.id == assigned.user_id)[0]
-              console.log('uuu', user)
-              return <p key={user.id}>{user.email} <TiDelete/></p>
+              return <p key={user.id} className={styles.assingn}> {user.email} <TiDelete className={styles.deleteAssing} /></p>
             })}
         </div>
       </div>
       {showSubgroupUsers &&
-        <div>
-          {subgroupUsers.users.length == 0 ? <p>You must invited to someone to this subgroup first</p>:  <p>Select the user:</p>}
+        <div className={styles.assignMenu}>
+          {subgroupUsers.users.length == 0 ? <h4>You must invited to someone to this subgroup first</h4>:  <h4>Select the user:</h4>}
           {subgroupUsers.users.length > 0  &&
-            <select onChange={handleAssignedUser}>
+            <select className={styles.assingSelect} onChange={handleAssignedUser}>
               <option value=''>User&apos;s emails</option>
             {subgroupUsers.users.map((user) => (
                <option key={user.id} value={user.id}>{user.email}</option>

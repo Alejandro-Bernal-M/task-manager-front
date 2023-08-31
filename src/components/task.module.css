@@ -52,11 +52,65 @@
   display: flex;
 }
 
-.assignDiv button,
 .assignDiv div {
-  width: 50%;
+  width: 60%;
   height: auto;
   min-height: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.assignDiv button {
+  height: 50px;
+  width: 40%;
+}
+
+.deleteAssing {
+  color: var(--color-5);
+  font-size: 20px;
+  min-height: 10px;
+  cursor: pointer;
+}
+
+.assingn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  justify-content: center;
+}
+
+.assignMenu {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assignMenu h4 {
+  text-align: center;
+}
+
+.assingSelect {
+  width: 100%;
+  height: 50px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  color: var(--color-1);
+  text-shadow: 1px 1px 1px var(--color-5);
+  cursor: pointer;
+}
+
+.assingSelect option {
+  color: var(--color-5)
+}
+
+.assignMenu button {
+  width: 100%;
 }
 
 @keyframes grabbingAnimation {
