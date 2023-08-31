@@ -13,7 +13,6 @@ const route = useRouter()
 const handleSignOut = () => {
   route.push('/');
   localStorage.removeItem('token');
-  setLoggedIn(false);
   toast.success('Logged out successfully');
 };
   return (
