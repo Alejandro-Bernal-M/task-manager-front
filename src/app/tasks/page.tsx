@@ -6,7 +6,6 @@ import TaskPopup from '@/components/TaskPopup'
 import { useStateContext } from '@/context/StateContext'
 import { useState, useEffect } from 'react'
 import api from '@/utils/common'
-import { toast } from 'react-hot-toast'
 import { usePathname } from 'next/navigation'
 
 const Tasks = () => {
@@ -32,7 +31,6 @@ const Tasks = () => {
         })
         const data = await response.json()
         if(data.error == 'Unauthorized'){
-          toast.error('Your session has expired, please login again');
           localStorage.removeItem('token');
           setLoggedIn(false);
         }
@@ -41,7 +39,6 @@ const Tasks = () => {
       catch(error) {
         console.log('hello error')
         localStorage.removeItem('token');
-        toast.error('Your session has expired, please login again');
         setLoggedIn(false);
       }
     }

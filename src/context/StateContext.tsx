@@ -2,6 +2,7 @@
 import { useContext, createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter, usePathname  } from 'next/navigation'
 import api from "@/utils/common";
+import { toast } from "react-hot-toast";
 
 const context = createContext<ContextType>({} as ContextType);
 
@@ -149,6 +150,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     if (getToken) {
       setToken(JSON.parse(getToken));
       setLoggedIn(true);
+    }else {
+      setLoggedIn(false);
     }
   }, [loggedIn, token, pathname]);
   
@@ -156,6 +159,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     if (!loggedIn) {
       if (pathname !== '/registration' && pathname !== '/') {
         router.push('/');
+        toast.error('Your session has expired, please login again');
       }
     }
   }, [loggedIn, pathname, router]);
@@ -198,6 +202,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setInvitations(data.data);
       }
 
+      if (response.status != 200){
+        localStorage.removeItem('token')
+      }
     } catch (error) {
       console.log(error)
     }
