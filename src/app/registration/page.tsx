@@ -8,7 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Registration() {
-  const { loggedIn, setLoggedIn } = useStateContext();
+  const { loggedIn, setLoggedIn, setToken } = useStateContext();
   const [SignUp, setSignUp] = useState<boolean>(false);
 
   const router = useRouter();
@@ -77,10 +77,11 @@ export default function Registration() {
           });
           const data = await response.json();
           if (data.status == 'Sucess') {
+            setLoggedIn(true);
+            setToken(data.token)
             toast.success('Logged in successfully');
             localStorage.setItem('token',JSON.stringify(data.token));
             localStorage.setItem('user_id',JSON.stringify(data.user_id));
-            setLoggedIn(true);
             router.push('/tasks');
           }
         } catch (error) {

@@ -67,6 +67,8 @@ type ContextType = {
   setSubgroupSelect: (subgroupSelect: string) => void;
   filteredSubgroup: string;
   setFilteredSubgroup: (filteredSubgroup: string) => void;
+  subgroupUsers: {subgroup: {}, users: any[]};
+  setSubgroupUsers: (subgroupUsers: {subgroup: {}, users: []}) => void;
 };
 
 export type TaskType = {
@@ -77,6 +79,7 @@ export type TaskType = {
   order: number;
   subgroup_id: string;
   author_id: string;
+  assigneds: [];
 };
 
 type GroupType = {
@@ -144,6 +147,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [subgroupInvitation, setSubgroupInvitation] = useState('');
   const [subgroupSelect, setSubgroupSelect] = useState('')
   const [filteredSubgroup, setFilteredSubgroup] = useState('');
+  const [subgroupUsers, setSubgroupUsers] = useState({subgroup: {}, users: []});
 
   useEffect(() => {
     const getToken = localStorage.getItem('token');
@@ -158,6 +162,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   useEffect(() => {
     if (!loggedIn) {
       if (pathname !== '/registration' && pathname !== '/') {
+
         router.push('/');
         toast.error('Your session has expired, please login again');
       }
@@ -202,8 +207,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setInvitations(data.data);
       }
 
-      if (response.status != 200){
+      if (response.status == 401){
         localStorage.removeItem('token')
+        //setLoggedIn(false)
       }
     } catch (error) {
       console.log(error)
@@ -318,7 +324,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         subgroupSelect,
         setSubgroupSelect,
         filteredSubgroup,
-        setFilteredSubgroup
+        setFilteredSubgroup,
+        subgroupUsers,
+        setSubgroupUsers
         }}>
         {children}
     </context.Provider>

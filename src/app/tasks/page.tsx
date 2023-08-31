@@ -9,15 +9,13 @@ import api from '@/utils/common'
 import { usePathname } from 'next/navigation'
 
 const Tasks = () => {
-  const { showPopup, setTasks,subgroupSelect, setLoggedIn, taskCounter, token, groups, filteredSubgroup, setSubgroupSelect, setFilteredSubgroup } = useStateContext();
+  const { showPopup, setTasks,subgroupSelect, setLoggedIn, taskCounter, token, groups, filteredSubgroup, setSubgroupSelect, setFilteredSubgroup, user, setSubgroupUsers } = useStateContext();
   const [status, setStatus] = useState('' as string)
   const pathname = usePathname()
   const [groupSelect, setGroupSelect] = useState('')
  
 
-  let user = localStorage.getItem('user_id')
-  if (user == null) user = ''
-  const url = api.Tasks(user)
+  const url = api.Tasks(user.id)
 
   useEffect(() => {
     async function fetchData() {
@@ -30,16 +28,11 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
-        if(data.error == 'Unauthorized'){
-          localStorage.removeItem('token');
-          setLoggedIn(false);
-        }
+        console.log(data)
         setTasks(data)
       }
       catch(error) {
         console.log('hello error')
-        localStorage.removeItem('token');
-        setLoggedIn(false);
       }
     }
     fetchData()
@@ -67,6 +60,26 @@ const Tasks = () => {
     }
      handleSubgroupName();
   },[groups, subgroupSelect, setFilteredSubgroup])
+
+  useEffect(() => {
+    const fetSubgroup = async() => {
+      try {
+        if (groupSelect=='' || subgroupSelect == '') return
+        const response = await fetch(api.specificSubgroup(user.id, groupSelect, subgroupSelect), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        })
+        const data = await response.json();
+        setSubgroupUsers(data.data)
+      } catch (error) {
+        
+      }
+    }
+    fetSubgroup()
+  },[groupSelect, subgroupSelect, token, user, setSubgroupUsers])
   
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']

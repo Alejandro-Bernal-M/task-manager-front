@@ -4,17 +4,18 @@ import { PiDotsSixVerticalBold } from 'react-icons/pi';
 import React, { useEffect, useState } from 'react';
 import api from '@/utils/common';
 import { toast } from 'react-hot-toast';
-
+import {TiDelete} from 'react-icons/ti'
 
 type TaskProps = {
   title: string,
   description: string,
   status: string,
   id: string,
-  authorId: string
+  authorId: string,
+  assigneds: []
 }
 
-const Task = ({title, description, status, id, authorId}: TaskProps) => {
+const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) => {
   const { tasks,
           taskCounter,
           setTaskCounter,
@@ -33,8 +34,12 @@ const Task = ({title, description, status, id, authorId}: TaskProps) => {
           Node,
           setNode,
           user,
-          token
+          token,
+          subgroupUsers,
+          allUsers
         } = useStateContext();
+  const[showSubgroupUsers, setShowSubgroupUsers] = useState(false);
+  const[assignedUser, setAssignedUser] = useState('');
 
   const handleDeleteTasks = async() => {
     
@@ -124,8 +129,39 @@ const Task = ({title, description, status, id, authorId}: TaskProps) => {
     ev.stopPropagation();
     setNode((ev.target as SVGSVGElement).parentElement);
   };
+
+  const handleAssignedUser = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    setAssignedUser(e.target.value)
+    console.log(assignedUser)
+  }
+
+  const handleAssignation = async() => {
+    if(assignedUser == '') return
+    try {
+      const response = await fetch (api.assignments(assignedUser), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify({
+          assignment: {
+            user_id: assignedUser,
+            task_id: id
+          }
+        })
+      })
+      const data = await response.json()
+      if(data.status == 'SUCCESS') toast.success(data.message)
+      if(data.status == 'ERROR') toast.error(data.message)
+      setTaskCounter(taskCounter + 1)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
-  
+  console.log(allUsers)
   return (
     <div className={styles.taskCard}
       id= {id}
@@ -142,11 +178,36 @@ const Task = ({title, description, status, id, authorId}: TaskProps) => {
       <p>{description}</p>
       <button onClick={handleDeleteTasks}>Delete</button>
       <div className={styles.assignDiv}>
-        {authorId == user.id && <button>Assign task</button>}
+        {authorId == user.id && <button onClick={() => setShowSubgroupUsers(!showSubgroupUsers)}>Assign task</button>}
         <div>
           <p>assigneds: </p>
+          {assigneds.map((assigned:any) => {
+              let user = allUsers.filter((user) => user.id == assigned.user_id)[0]
+              console.log('uuu', user)
+              return <p key={user.id}>{user.email} <TiDelete/></p>
+            })}
         </div>
       </div>
+      {showSubgroupUsers &&
+        <div>
+          {subgroupUsers.users.length == 0 ? <p>You must invited to someone to this subgroup first</p>:  <p>Select the user:</p>}
+          {subgroupUsers.users.length > 0  &&
+            <select onChange={handleAssignedUser}>
+              <option value=''>User&apos;s emails</option>
+            {subgroupUsers.users.map((user) => (
+               <option key={user.id} value={user.id}>{user.email}</option>
+            ))}
+          </select>}
+          {assignedUser != '' && 
+            <button onClick={handleAssignation}>
+              Assign {subgroupUsers.users.map(user => {
+                if(user.id == assignedUser){
+                  return user.email
+                }
+                })}
+            </button>}
+        </div>
+      }
     </div>
   )
 }
