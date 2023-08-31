@@ -28,7 +28,6 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
-        console.log(data)
         setTasks(data)
       }
       catch(error) {

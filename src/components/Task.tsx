@@ -133,7 +133,6 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
   const handleAssignedUser = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setAssignedUser(e.target.value)
-    console.log(assignedUser)
   }
 
   const handleAssignation = async() => {
@@ -161,7 +160,26 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
     }
   }
   
-  return (
+  const handleDeleteAssignation = async(assigned_id: number) => {
+    try {
+      const response = await fetch(api.specificAssignment(user.id, assigned_id), {
+        method: 'DELETE',
+        headers: {
+          'Authorization': token
+        }
+      });
+
+      const data = await response.json();
+      if(data.status == 'SUCCESS') toast.success(data.message)
+      if(data.status == 'ERROR') toast.error(data.message)
+      setTaskCounter(taskCounter + 1)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+    return (
     <div className={styles.taskCard}
       id= {id}
       draggable={false}
@@ -182,7 +200,7 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
           <p>assigneds: </p>
           {assigneds.map((assigned:any) => {
               let user = allUsers.filter((user) => user.id == assigned.user_id)[0]
-              return <p key={user.id} className={styles.assingn}> {user.email} <TiDelete className={styles.deleteAssing} /></p>
+              return <p key={user.id} className={styles.assingn}> {user.email} <TiDelete onClick={() => handleDeleteAssignation(assigned.id)} className={styles.deleteAssing} /></p>
             })}
         </div>
       </div>
