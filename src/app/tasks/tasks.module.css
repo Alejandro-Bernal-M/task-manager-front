@@ -31,6 +31,7 @@
   flex-direction: column;
 }
 
+
 .authorOrNotDiv div {
   width: 60%;
   height: auto;
@@ -38,11 +39,11 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .authorOrNotDiv div button {
-  width: 40%;
-  max-width: 200px;
+  width: 200px;
   height: 40px;
   border: 2px solid var(--color-1);
   border-radius: 10px;
@@ -51,6 +52,10 @@
   text-shadow: 1px 1px 1px var(--color-5);
   font-size: 1rem;
   cursor: pointer;
+}
+
+.active {
+  box-shadow: 0 0 3px 4px var(--color-5);
 }
 
 .options {
