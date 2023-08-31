@@ -9,10 +9,24 @@ import api from '@/utils/common'
 import { usePathname } from 'next/navigation'
 
 const Tasks = () => {
-  const { showPopup, setTasks,subgroupSelect, setLoggedIn, taskCounter, token, groups, filteredSubgroup, setSubgroupSelect, setFilteredSubgroup, user, setSubgroupUsers } = useStateContext();
-  const [status, setStatus] = useState('' as string)
-  const pathname = usePathname()
-  const [groupSelect, setGroupSelect] = useState('')
+  const { showPopup,
+          setTasks,
+          subgroupSelect,
+          setLoggedIn,
+          taskCounter,
+          token,
+          groups,
+          filteredSubgroup,
+          setSubgroupSelect,
+          setFilteredSubgroup,
+          user,
+          setSubgroupUsers
+        } = useStateContext();
+
+  const [status, setStatus] = useState('' as string);
+  const pathname = usePathname();
+  const [groupSelect, setGroupSelect] = useState('');
+  const [author, setAuthor] = useState(true);
  
 
   const url = api.Tasks(user.id)
@@ -84,9 +98,23 @@ const Tasks = () => {
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
     return (
         <div className={styles.container}>
+          <div className={styles.authorOrNotDiv}>
+            <h2>See the task:</h2>
+            <div>
+              <button onClick={()=> setAuthor(true)}>Authored by you</button>
+              <button onClick={()=> setAuthor(false)}>Assigned to you</button>
+            </div>
+          </div>
+          { !author &&
+            <div className={styles.options}>
+              Invited
+            </div>
+
+          }
+          {author &&
           <div className={styles.options}>
             <h2>You are seeing the tasks for the subgroup: {filteredSubgroup}</h2>
-            <div>
+             <div>
               <select name='groups' onChange={handleGroupSelect}>
               <option value=''>Select the group</option>
                 {groups.map((group:any) => (
@@ -105,6 +133,7 @@ const Tasks = () => {
               </select>
             </div>
           </div>
+          }
           {showPopup && <TaskPopup status={status} setStatus={setStatus}/>}
             <div className={styles.tasksContainer}>
               {statuses.map((title, index) => (

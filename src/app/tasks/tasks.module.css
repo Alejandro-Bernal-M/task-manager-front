@@ -21,6 +21,38 @@
   flex-wrap: wrap;
 }
 
+.authorOrNotDiv {
+  width: 60%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.authorOrNotDiv div {
+  width: 60%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.authorOrNotDiv div button {
+  width: 40%;
+  max-width: 200px;
+  height: 40px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  background-color: var(--color-5);
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 .options {
   display: flex;
   flex-direction: column;
