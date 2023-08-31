@@ -11,7 +11,7 @@ const api= {
   userGroups: (user_id : string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/usergroups`, // GET for all userGroups, POST for create userGroup
   invitations:(user_id :string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/invitations`, // GET for all invitations, POST for create invitation
   specificInvitation: (user_id:string, invitation_id: string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/invitations/${invitation_id}`, // PUT and DELETE
-  assignments:(user_id:string) => `${process.env.NEXT_PUBLIC_API}users/${user_id}/assignments`, // GET for all the assingments, POST for create Assingments
+  assignments:(user_id:string) => `${process.env.NEXT_PUBLIC_API}/users/${user_id}/assignments`, // GET for all the assingments, POST for create Assingments
 }
 
 export default api
