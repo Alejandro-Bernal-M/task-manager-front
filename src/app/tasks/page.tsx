@@ -46,7 +46,6 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
-        console.log('all', data)
         setTasks(data.authored)
         setAssignedTasks(data.assigned)
       }

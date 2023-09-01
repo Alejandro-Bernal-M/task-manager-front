@@ -17,11 +17,13 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
           assignedTasks,
           setAssignedTasks,
           draggedTask,
+          setDraggedTask,
           idToChange,
           setIdToChange,
           setNode,
           subgroupSelect,
           token,
+          user,
           author
         } = useStateContext();
 
@@ -59,6 +61,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       console.log(error);
     }
     setNode(null);
+    setDraggedTask(null);
   }
   
   const changeDraggedTaskStatus = () => {
@@ -85,7 +88,12 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
   const swapTasksPositions =async () => {
     if(idToChange === draggedTask?.id) return;
     if (!draggedTask) return;
-    let newTasks = [...tasks];
+    let newTasks = []
+    if (author){
+      newTasks = [...tasks];
+    }else {
+      newTasks = [...assignedTasks];
+    }
     let draggedTaskIndex = newTasks.findIndex(task => task.id == draggedTask.id);
     let taskToChangeIndex = newTasks.findIndex(task => task.id == idToChange);
     if(draggedTaskIndex === -1 || taskToChangeIndex === -1) return;
@@ -94,14 +102,24 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     newTasks[taskToChangeIndex].order = newSecondOrder;
     newTasks[draggedTaskIndex].order = newFistOrder;
     swapTasksPositionsApi({task1: newTasks[draggedTaskIndex], task2: newTasks[taskToChangeIndex]});
-    setTasks(newTasks.sort((a, b) => a.order - b.order));
+    if(author){
+      setTasks(newTasks.sort((a, b) => a.order - b.order));
+    }else {
+      setAssignedTasks(newTasks.sort((a, b) => a.order - b.order));
+    }
     setIdToChange('')
   }
   
   const swapTasksPositionsApi = async ({task1, task2} :{task1: TaskType, task2: TaskType}) => {
-    const userId = localStorage.getItem('user_id') || '';
-    const url1 = api.Task(userId, task1.id);
-    const url2 = api.Task(userId, task2.id);
+    let url1= ''
+    let url2= ''
+    if(author){
+      url1 = api.Task(user.id, task1.id);
+      url2 = api.Task(user.id, task2.id);
+    }else {
+      url1 = api.Task(task1.author_id, task1.id);
+      url2 = api.Task(task2.author_id, task2.id);
+    }
 
     try {
       const response = await fetch(url1, {
@@ -117,7 +135,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
         })
       });
       const data = await response.json();
-
       if(data.errors) {
         toast.error(data.errors)
       }
@@ -149,7 +166,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     ev.preventDefault();
     changeDraggedTaskStatus();
     swapTasksPositions();
- 
   }
 
   return (
