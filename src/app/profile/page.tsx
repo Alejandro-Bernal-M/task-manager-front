@@ -6,85 +6,25 @@ import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import { useEffect, useState } from 'react';
 import Invitation from '@/components/Invitation';
+import InvitationPopup from '@/components/InvitationPopup';
 
 const Profile = () =>{
-  const { setLoggedIn } = useStateContext();
-  const [user, setUser] = useState({} as any);
-  const [invitations, setInvitations] = useState({received: [], send: []} as any);
+  const { setLoggedIn, invitationPopup, setInvitationPopup,user, setAllUsers, token, invitations } = useStateContext();
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  let tokenString = localStorage.getItem('token') || '';
-  if (!tokenString) {
-    toast.error('Your session has expired, please login again');
-    setLoggedIn(false);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user_id');
-    tokenString = JSON.stringify('');
-  }
-  const token = JSON.parse(tokenString) || '';
-  const userId = localStorage.getItem('user_id') || '';
-  const urlUser = api.user(userId);
-  useEffect(() => {
-      const fetchUser = async () => {
-        try{
-          const response = await fetch(urlUser, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': token
-            }
-          });
-          const data = await response.json();
-  
-          if(data.status === 'SUCCESS'){
-            setUser(data.data);
-            console.log(user);
-            setName(data.data.name);
-            setEmail(data.data.email);
-          }
-          if(data.error == 'Unauthorized'){
-            toast.error('Your session has expired, please login again');
-            localStorage.removeItem('token');
-            localStorage.removeItem('user_id');
-            setLoggedIn(false);
-            return;
-          }
-      }
-      catch(error){
-        toast.error('Your session has expired, please login again');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user_id');
-        setLoggedIn(false);
-      }
-    }
-    fetchUser();
-    const fetchInvitations = async () => {
-      try {
-        const response = await fetch(api.invitations(userId), {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-          }
-        })
-        const data = await response.json();
-
-        if(data.status === 'SUCCESS'){
-          setInvitations(data.data);
-        }
-
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchInvitations();
-  }, [setLoggedIn, token, urlUser, userId]);
+useEffect(() => {
+  setName(user.name);
+  setEmail(user.email);
+}, [user])
+    
 
   const handleEdit = () => {
+    const token = JSON.parse(localStorage.getItem('token') || '');
+    const userId = localStorage.getItem('user_id') || '';
     const url = api.user(userId);
     if(password !== confirm){
       toast.error('Passwords do not match');
@@ -138,8 +78,13 @@ const Profile = () =>{
     editUser();
   }
 
+  const handleNewInvitation = () => {
+    setInvitationPopup(!invitationPopup);
+  }
+
   return(
     <div className={styles.container}>
+      {invitationPopup && <InvitationPopup />}
       <h1>Your Profile</h1>
       <div className={styles.userContainer}>
           <p>Name:</p>
@@ -156,19 +101,23 @@ const Profile = () =>{
       </div>
       <div className={styles.mainHolder}>
         <div className={styles.invitationsContainer}>
-          <h2>Your Invitations</h2>
+          <h2>Your Pendings Invitations</h2>
           <hr />
-          <button className={styles.newInvitation}>New invitation +</button>
-          {invitations.received.length > 0 ? invitations.received.map((invitation: any) => (
-            <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} />
-              )) : <p>No Invitations</p>}
+          <div className={styles.invitationsHolder}>
+            {invitations.received.filter((inv:any) => inv.status == 'Pending').length > 0 ? invitations.received.filter((inv:any) => inv.status == 'Pending').map((invitation: any) => (  
+              <Invitation key={invitation.id} send={false} subgroup={invitation.subgroup} subgroupId={invitation.subgroup_id} name={invitation.invited_by.name} email={invitation.invited_by.email} status={invitation.status} id={invitation.id} />
+              )) : <p className={styles.noInvitation}>No Invitations</p>}
+          </div>
         </div>
         <div className={styles.invitationsContainer}>
           <h2>Your Sent Invitations</h2>
           <hr />
-          {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
-            <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} />
-              )) : <p>No Invitations</p>}
+          <button className={styles.newInvitation} onClick={handleNewInvitation}>New invitation +</button>
+          <div className={styles.invitationsHolder}>
+            {invitations.send.length > 0 ? invitations.send.map((invitation: any) => (
+              <Invitation key={invitation.id} send={true} subgroup={invitation.subgroup} subgroupId={invitation.subgroup_id}  name={invitation.invited.name} email={invitation.invited.email} status={invitation.status} id={invitation.id} />
+                )) : <p className={styles.noInvitation}>No Invitations</p>}
+          </div>
         </div>
       </div>
     </div>

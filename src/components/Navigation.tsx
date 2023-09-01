@@ -4,14 +4,15 @@ import styles from './navigation.module.css'
 import { useStateContext } from '@/context/StateContext'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
-import { usePathname } from 'next/navigation'
+import { usePathname,useRouter } from 'next/navigation'
 
 const Navigation = () => {
 const { loggedIn, setLoggedIn } = useStateContext();
 const pathname = usePathname();
+const route = useRouter()
 const handleSignOut = () => {
+  route.push('/');
   localStorage.removeItem('token');
-  setLoggedIn(false);
   toast.success('Logged out successfully');
 };
   return (

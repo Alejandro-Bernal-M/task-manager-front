@@ -1,12 +1,15 @@
 'use client'
 import { useContext, createContext, useState, useEffect, ReactNode } from "react";
 import { useRouter, usePathname  } from 'next/navigation'
+import api from "@/utils/common";
+import { toast } from "react-hot-toast";
 
 const context = createContext<ContextType>({} as ContextType);
 
 interface User {
   name: string;
   email: string;
+  id: string;
 }
 
 type ContextType = {
@@ -14,6 +17,8 @@ type ContextType = {
   setUser: (user: User) => void;
   tasks: TaskType[];
   setTasks: (tasks: TaskType[]) => void; 
+  assignedTasks: TaskType[];
+  setAssignedTasks: (tasks: TaskType[]) => void; 
   loggedIn: boolean;
   setLoggedIn: (loggedIn: boolean) => void;
   token: string;
@@ -50,6 +55,24 @@ type ContextType = {
   setGroupPopup: (groupPopup: boolean) => void;
   groupId: string;
   setGroupId: (groupId: string) => void;
+  invitationPopup: boolean;
+  setInvitationPopup: (invitationPopup: boolean) => void;
+  allUsers: User[];
+  setAllUsers: (allUsers: User[]) => void;
+  invitations: any;
+  setInvitations: (invitations: any) => void;
+  userInvitation: string;
+  setUserInvitation: (userInvitation: string) => void;
+  subgroupInvitation: string;
+  setSubgroupInvitation: (subgroupInvitation: string) => void;
+  subgroupSelect: string;
+  setSubgroupSelect: (subgroupSelect: string) => void;
+  filteredSubgroup: string;
+  setFilteredSubgroup: (filteredSubgroup: string) => void;
+  subgroupUsers: {subgroup: {}, users: any[]};
+  setSubgroupUsers: (subgroupUsers: {subgroup: {}, users: []}) => void;
+  author: boolean;
+  setAuthor: (author:boolean) => void;
 };
 
 export type TaskType = {
@@ -58,6 +81,9 @@ export type TaskType = {
   status: string;
   id: string;
   order: number;
+  subgroup_id: string;
+  author_id: string;
+  assigneds: [];
 };
 
 type GroupType = {
@@ -81,6 +107,7 @@ type UserGroup =  {
   user_id: string;
   subgroup_id: string;
   title: string;
+  id: string;
 }
 
 type GroupAndSubgroupsPopUp = {
@@ -96,9 +123,11 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
   const [user, setUser] = useState<User>({
     name: 'John Doe',
-    email: 'test@test.com'
+    email: 'test@test.com',
+    id: '1'
   });
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [assignedTasks, setAssignedTasks] = useState<TaskType[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -117,22 +146,156 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [groupAndSubgroupsPopUp, setGroupAndSubgroupsPopUp] = useState<GroupAndSubgroupsPopUp>(null);
   const [groupPopup, setGroupPopup] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<string>('');
+  const [invitationPopup, setInvitationPopup] = useState<boolean>(false);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [invitations, setInvitations] = useState({received: [], send: []} as any);
+  const [userInvitation, setUserInvitation] = useState('');
+  const [subgroupInvitation, setSubgroupInvitation] = useState('');
+  const [subgroupSelect, setSubgroupSelect] = useState('')
+  const [filteredSubgroup, setFilteredSubgroup] = useState('');
+  const [subgroupUsers, setSubgroupUsers] = useState({subgroup: {}, users: []});
+  const [author, setAuthor] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setToken(token);
+    const getToken = localStorage.getItem('token');
+    if (getToken) {
+      setToken(JSON.parse(getToken));
       setLoggedIn(true);
+    }else {
+      setLoggedIn(false);
     }
-  }, [loggedIn]);
-
+  }, [loggedIn, token, pathname]);
+  
   useEffect(() => {
     if (!loggedIn) {
       if (pathname !== '/registration' && pathname !== '/') {
+
         router.push('/');
+        toast.error('Your session has expired, please login again');
       }
     }
   }, [loggedIn, pathname, router]);
+  
+  useEffect(() => {
+
+    const userId = localStorage.getItem('user_id') || '';
+    const urlGroups = api.groups(userId);
+    const fetchGroups = async () => {
+      try{
+        const response = await fetch(urlGroups, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        });
+        const data = await response.json();
+        if(data.status === 'SUCCESS'){
+          setGroups(data.data);
+        }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  fetchGroups();
+
+  const fetchUserGroups = async () => {
+    const urlUserGroups = api.userGroups(user.id);
+    try {
+      const response = await fetch(urlUserGroups, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+      const data = await response.json();
+      if(data.status === 'SUCCESS'){
+        setUserGroups(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchUserGroups();
+
+  const fetchInvitations = async () => {
+    try {
+      const response = await fetch(api.invitations(userId), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+      const data = await response.json();
+
+      if(data.status === 'SUCCESS'){
+        setInvitations(data.data);
+      }
+
+      if (response.status == 401){
+        localStorage.removeItem('token')
+        //setLoggedIn(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  fetchInvitations();
+  }, [groupCount, token, user])
+
+  useEffect(()=> {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch(api.users, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          }
+        })
+        const data = await response.json();
+
+        if(data.status === 'SUCCESS'){
+          setAllUsers(data.data);
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchAllUsers();
+
+  },[setAllUsers, token])
+
+  useEffect(() => {
+    const userId = localStorage.getItem('user_id') || '';
+    const urlUser = api.user(userId);
+      const fetchUser = async () => {
+        try{
+          const response = await fetch(urlUser, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': token
+            }
+          });
+          const data = await response.json();
+  
+          if(data.status === 'SUCCESS'){
+            setUser(data.data);
+          }
+        }
+        catch(error){
+          console.log(error)
+        }
+      }
+      fetchUser();
+      
+    }, [ token]);
 
   return (
     <context.Provider
@@ -141,6 +304,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setUser,
         tasks,
         setTasks,
+        assignedTasks,
+        setAssignedTasks,
         loggedIn,
         setLoggedIn,
         token,
@@ -176,7 +341,25 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         groupPopup,
         setGroupPopup,
         groupId,
-        setGroupId
+        setGroupId,
+        invitationPopup,
+        setInvitationPopup,
+        allUsers,
+        setAllUsers,
+        invitations,
+        setInvitations,
+        userInvitation,
+        setUserInvitation,
+        subgroupInvitation,
+        setSubgroupInvitation,
+        subgroupSelect,
+        setSubgroupSelect,
+        filteredSubgroup,
+        setFilteredSubgroup,
+        subgroupUsers,
+        setSubgroupUsers,
+        author,
+        setAuthor
         }}>
         {children}
     </context.Provider>

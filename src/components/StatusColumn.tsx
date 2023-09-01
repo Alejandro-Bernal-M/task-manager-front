@@ -11,7 +11,21 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn, taskCounter, setTaskCounter } = useStateContext();
+  const { setShowPopup,
+          tasks,
+          setTasks,
+          assignedTasks,
+          setAssignedTasks,
+          draggedTask,
+          setDraggedTask,
+          idToChange,
+          setIdToChange,
+          setNode,
+          subgroupSelect,
+          token,
+          user,
+          author
+        } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -20,14 +34,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
 
   const handleDrop = async(ev: React.DragEvent<HTMLDivElement>) => {
     ev.preventDefault();
-    const tokenString = localStorage.getItem('token');
-    if (!tokenString) {
-      toast.error('Your session has expired, please login again');
-      setLoggedIn(false);
-      return;
-    }
-    let token = JSON.parse(tokenString);
-    
     const userId = localStorage.getItem('user_id') || '';
     if (!draggedTask) return;
     const url = api.Task(userId, draggedTask?.id);
@@ -55,23 +61,39 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       console.log(error);
     }
     setNode(null);
+    setDraggedTask(null);
   }
   
   const changeDraggedTaskStatus = () => {
-    let newTasks = tasks.map((task) => {
-      if (task.id === draggedTask?.id) {
-        task.status = title;
-      }
-      return task;
-    })
-    setTasks(newTasks);
+    if(author){
+        let newTasks = tasks.map((task) => {
+        if (task.id === draggedTask?.id) {
+          task.status = title;
+        }
+        return task;
+        })
+        setTasks(newTasks);
+    }else {
+      let newTasks = assignedTasks.map((task) => {
+        if (task.id === draggedTask?.id) {
+          task.status = title;
+        }
+        return task;
+        })
+        setAssignedTasks(newTasks)
+    }
 
   }
 
   const swapTasksPositions =async () => {
     if(idToChange === draggedTask?.id) return;
     if (!draggedTask) return;
-    let newTasks = [...tasks];
+    let newTasks = []
+    if (author){
+      newTasks = [...tasks];
+    }else {
+      newTasks = [...assignedTasks];
+    }
     let draggedTaskIndex = newTasks.findIndex(task => task.id == draggedTask.id);
     let taskToChangeIndex = newTasks.findIndex(task => task.id == idToChange);
     if(draggedTaskIndex === -1 || taskToChangeIndex === -1) return;
@@ -80,23 +102,24 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     newTasks[taskToChangeIndex].order = newSecondOrder;
     newTasks[draggedTaskIndex].order = newFistOrder;
     swapTasksPositionsApi({task1: newTasks[draggedTaskIndex], task2: newTasks[taskToChangeIndex]});
-    setTasks(newTasks.sort((a, b) => a.order - b.order));
+    if(author){
+      setTasks(newTasks.sort((a, b) => a.order - b.order));
+    }else {
+      setAssignedTasks(newTasks.sort((a, b) => a.order - b.order));
+    }
     setIdToChange('')
   }
   
   const swapTasksPositionsApi = async ({task1, task2} :{task1: TaskType, task2: TaskType}) => {
-    const tokenString = localStorage.getItem('token');
-    if (!tokenString) {
-      toast.error('Your session has expired, please login again');
-      setLoggedIn(false);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user_id');
-      return;
+    let url1= ''
+    let url2= ''
+    if(author){
+      url1 = api.Task(user.id, task1.id);
+      url2 = api.Task(user.id, task2.id);
+    }else {
+      url1 = api.Task(task1.author_id, task1.id);
+      url2 = api.Task(task2.author_id, task2.id);
     }
-    let token = JSON.parse(tokenString);
-    const userId = localStorage.getItem('user_id') || '';
-    const url1 = api.Task(userId, task1.id);
-    const url2 = api.Task(userId, task2.id);
 
     try {
       const response = await fetch(url1, {
@@ -112,7 +135,6 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
         })
       });
       const data = await response.json();
-
       if(data.errors) {
         toast.error(data.errors)
       }
@@ -144,9 +166,7 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
     ev.preventDefault();
     changeDraggedTaskStatus();
     swapTasksPositions();
- 
   }
-
 
   return (
     <div className={styles.column}
@@ -156,8 +176,11 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       <h2>{title}</h2>
       <button className={styles.addTask} onClick={handleAddTask}>Add Task +</button>
       <div className={styles.tasksColumn} id={title}>
-        { tasks.length > 0 && tasks.map((task, index) => (
-          task.status == title && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id}/>
+        { author && tasks?.length > 0 && tasks.map((task, index) => (
+          task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds}/>
+        ))}
+        { !author && assignedTasks?.length > 0 && assignedTasks.map((task, index) => (
+          task.status == title && task.subgroup_id == subgroupSelect &&  <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds}/>
         ))}
       </div>
     </div>

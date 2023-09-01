@@ -1,20 +1,91 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    padding: 100px 5px 30px 5px;
-    background-image: url('../../assets/images/stacked-steps-haikei.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 100px 5px 30px 5px;
+  background-image: url('../../assets/images/stacked-steps-haikei.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  gap: 10px;
 }
 
 .tasksContainer {
-    width: 100%;
-    height: auto;
-    min-height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.authorOrNotDiv {
+  width: 60%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+}
+
+
+.authorOrNotDiv div {
+  width: 60%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.authorOrNotDiv div button {
+  width: 200px;
+  height: 40px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  background-color: var(--color-5);
+  color: var(--color-3);
+  text-shadow: 1px 1px 1px var(--color-5);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.active {
+  box-shadow: 0 0 3px 4px var(--color-5);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  min-height: 120px;
+  width: 80%;
+  gap: 10px;
+  text-align: center;
+}
+
+.options div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.select {
+  width: max(30%, 250px);
+  height: 50px;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  color: var(--color-1);
+  text-shadow: 1px 1px 1px var(--color-5);
+  cursor: pointer;
 }
