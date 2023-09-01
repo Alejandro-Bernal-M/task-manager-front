@@ -78,8 +78,8 @@
   flex-wrap: wrap;
 }
 
-.options div select {
-  width: max(30%, 200px);
+.select {
+  width: max(30%, 250px);
   height: 50px;
   border: 2px solid var(--color-1);
   border-radius: 10px;

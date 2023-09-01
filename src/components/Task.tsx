@@ -36,7 +36,8 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
           user,
           token,
           subgroupUsers,
-          allUsers
+          allUsers,
+          author
         } = useStateContext();
   const[showSubgroupUsers, setShowSubgroupUsers] = useState(false);
   const[assignedUser, setAssignedUser] = useState('');
@@ -200,13 +201,13 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
           <p>assigneds: </p>
           {assigneds.map((assigned:any) => {
               let user = allUsers.filter((user) => user.id == assigned.user_id)[0]
-              return <p key={user.id} className={styles.assingn}> {user.email} <TiDelete onClick={() => handleDeleteAssignation(assigned.id)} className={styles.deleteAssing} /></p>
+              return <p key={user.id} className={styles.assingn}> {user.email} {author && <TiDelete onClick={() => handleDeleteAssignation(assigned.id)} className={styles.deleteAssing} />}</p>
             })}
         </div>
       </div>
       {showSubgroupUsers &&
         <div className={styles.assignMenu}>
-          {subgroupUsers.users.length == 0 ? <h4>You must invited to someone to this subgroup first</h4>:  <h4>Select the user:</h4>}
+          {subgroupUsers.users.length == 0 ? <h4>You must invite someone to this subgroup first</h4>:  <h4>Select the user:</h4>}
           {subgroupUsers.users.length > 0  &&
             <select className={styles.assingSelect} onChange={handleAssignedUser}>
               <option value=''>User&apos;s emails</option>

@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from './groups.module.css';
-import { toast } from 'react-hot-toast';
 import api from '@/utils/common';
 import { useStateContext } from '@/context/StateContext';
 import GroupsPopup from '@/components/GroupsPopup';
@@ -10,45 +9,15 @@ import Subgroup from '@/components/Subgroup';
 
 const Groups = () => {
   const {
-          setLoggedIn,
           groups,
-          groupCount,
           userGroups,
-          setUserGroups,
           setGroupAndSubgroupsPopUp,
           groupPopup,
-          setGroupPopup,
-          token
+          setGroupPopup
         } = useStateContext();
 
-  const userId = localStorage.getItem('user_id') || '';
-  const urlUserGroups = api.userGroups(userId);
 
-  useEffect(() => {
-
-  const fetchUserGroups = async () => {
-    try {
-      const response = await fetch(urlUserGroups, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        }
-      });
-      const data = await response.json();
-      if(data.status === 'SUCCESS'){
-        setUserGroups(data.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  fetchUserGroups();
-  }, [ token, groupCount, urlUserGroups, setUserGroups, setLoggedIn])
-
-  const handleAddGroup = async() => {
+  const handleAddGroup = () => {
     setGroupAndSubgroupsPopUp({
       popupTitle: 'Add Group',
       title: 'Group Name',

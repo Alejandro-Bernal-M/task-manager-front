@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation'
 const Tasks = () => {
   const { showPopup,
           setTasks,
+          setAssignedTasks,
           subgroupSelect,
           setLoggedIn,
           taskCounter,
@@ -20,13 +21,16 @@ const Tasks = () => {
           setSubgroupSelect,
           setFilteredSubgroup,
           user,
-          setSubgroupUsers
+          setSubgroupUsers,
+          userGroups,
+          author,
+          setAuthor
         } = useStateContext();
 
   const [status, setStatus] = useState('' as string);
   const pathname = usePathname();
   const [groupSelect, setGroupSelect] = useState('');
-  const [author, setAuthor] = useState(true);
+  const [assignedSubgroup, setAssignedSubgroup] = useState('');
  
 
   const url = api.Tasks(user.id)
@@ -42,14 +46,16 @@ const Tasks = () => {
           }
         })
         const data = await response.json()
-        setTasks(data)
+        console.log('all', data)
+        setTasks(data.authored)
+        setAssignedTasks(data.assigned)
       }
       catch(error) {
         console.log('hello error')
       }
     }
     fetchData()
-  },[taskCounter, pathname, setLoggedIn, setTasks, url, token])
+  },[taskCounter, pathname, setLoggedIn, setTasks, url, token, setAssignedTasks])
 
 
   const handleGroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,6 +66,17 @@ const Tasks = () => {
   const handleSubgroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setSubgroupSelect(e.target.value)
+  }
+
+  const handleAssignedSubgroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    setSubgroupSelect(e.target.value)
+    if(e.target.value == ''){
+      setAssignedSubgroup('No subgroup selected')
+      return
+    }
+    let subgroup = userGroups.filter(sub => sub.id == e.target.value)
+    setAssignedSubgroup(subgroup[0].title)
   }
 
   useEffect(()=>{
@@ -107,7 +124,11 @@ const Tasks = () => {
           </div>
           { !author &&
             <div className={styles.options}>
-              Invited
+              <h2>You are seeing the tasks assigned to you for the subgroup: {assignedSubgroup}</h2>
+              <select className={styles.select} onChange={handleAssignedSubgroupSelect}>
+                <option value='' >Select the subgroup</option>
+                {userGroups.map(subgroup => <option key={subgroup.id} value={subgroup.id}>{subgroup.title}</option>)}
+              </select>
             </div>
 
           }
@@ -115,13 +136,13 @@ const Tasks = () => {
           <div className={styles.options}>
             <h2>You are seeing the tasks for the subgroup: {filteredSubgroup}</h2>
              <div>
-              <select name='groups' onChange={handleGroupSelect}>
+              <select  className={styles.select} name='groups' onChange={handleGroupSelect}>
               <option value=''>Select the group</option>
                 {groups.map((group:any) => (
                   <option key={group.group.id} value={group.group.id}>{group.group.title}</option>
                   ))}
               </select>
-              <select name='subgroup' onChange={handleSubgroupSelect}>
+              <select className={styles.select} name='subgroup' onChange={handleSubgroupSelect}>
                 <option value={0}>Select the subgroup</option>
                   {groups.map((group:any) => {
                     if(group.group.id == groupSelect){

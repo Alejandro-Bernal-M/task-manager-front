@@ -11,7 +11,19 @@ type StatusColumnProps = {
 }
 
 const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
-  const { setShowPopup, tasks, setTasks, draggedTask, idToChange, setIdToChange, setNode, setLoggedIn, subgroupSelect, token} = useStateContext();
+  const { setShowPopup,
+          tasks,
+          setTasks,
+          assignedTasks,
+          setAssignedTasks,
+          draggedTask,
+          idToChange,
+          setIdToChange,
+          setNode,
+          subgroupSelect,
+          token,
+          author
+        } = useStateContext();
 
   const handleAddTask = () => {
     setStatus(title);
@@ -138,8 +150,11 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
       <h2>{title}</h2>
       <button className={styles.addTask} onClick={handleAddTask}>Add Task +</button>
       <div className={styles.tasksColumn} id={title}>
-        { tasks.length > 0 && tasks.map((task, index) => (
+        { author && tasks?.length > 0 && tasks.map((task, index) => (
           task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds}/>
+        ))}
+        { !author && assignedTasks?.length > 0 && assignedTasks.map((task, index) => (
+          task.status == title && task.subgroup_id == subgroupSelect &&  <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds}/>
         ))}
       </div>
     </div>

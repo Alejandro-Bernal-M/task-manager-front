@@ -17,6 +17,8 @@ type ContextType = {
   setUser: (user: User) => void;
   tasks: TaskType[];
   setTasks: (tasks: TaskType[]) => void; 
+  assignedTasks: TaskType[];
+  setAssignedTasks: (tasks: TaskType[]) => void; 
   loggedIn: boolean;
   setLoggedIn: (loggedIn: boolean) => void;
   token: string;
@@ -69,6 +71,8 @@ type ContextType = {
   setFilteredSubgroup: (filteredSubgroup: string) => void;
   subgroupUsers: {subgroup: {}, users: any[]};
   setSubgroupUsers: (subgroupUsers: {subgroup: {}, users: []}) => void;
+  author: boolean;
+  setAuthor: (author:boolean) => void;
 };
 
 export type TaskType = {
@@ -103,6 +107,7 @@ type UserGroup =  {
   user_id: string;
   subgroup_id: string;
   title: string;
+  id: string;
 }
 
 type GroupAndSubgroupsPopUp = {
@@ -122,6 +127,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     id: '1'
   });
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [assignedTasks, setAssignedTasks] = useState<TaskType[]>([]);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -148,6 +154,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [subgroupSelect, setSubgroupSelect] = useState('')
   const [filteredSubgroup, setFilteredSubgroup] = useState('');
   const [subgroupUsers, setSubgroupUsers] = useState({subgroup: {}, users: []});
+  const [author, setAuthor] = useState(true);
 
   useEffect(() => {
     const getToken = localStorage.getItem('token');
@@ -192,6 +199,28 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
   }
   fetchGroups();
+
+  const fetchUserGroups = async () => {
+    const urlUserGroups = api.userGroups(user.id);
+    try {
+      const response = await fetch(urlUserGroups, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+      const data = await response.json();
+      if(data.status === 'SUCCESS'){
+        setUserGroups(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchUserGroups();
+
   const fetchInvitations = async () => {
     try {
       const response = await fetch(api.invitations(userId), {
@@ -216,7 +245,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
     }
   }
   fetchInvitations();
-  }, [groupCount, token])
+  }, [groupCount, token, user])
 
   useEffect(()=> {
     const fetchAllUsers = async () => {
@@ -275,6 +304,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setUser,
         tasks,
         setTasks,
+        assignedTasks,
+        setAssignedTasks,
         loggedIn,
         setLoggedIn,
         token,
@@ -326,7 +357,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         filteredSubgroup,
         setFilteredSubgroup,
         subgroupUsers,
-        setSubgroupUsers
+        setSubgroupUsers,
+        author,
+        setAuthor
         }}>
         {children}
     </context.Provider>
