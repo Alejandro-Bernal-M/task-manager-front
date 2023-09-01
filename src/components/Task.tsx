@@ -204,7 +204,7 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
       <div className={styles.assignDiv}>
         {authorId == user.id && <button onClick={() => setShowSubgroupUsers(!showSubgroupUsers)}>Assign menu</button>}
         <div>
-          <p>assigneds: </p>
+          <p>assigned: </p>
           {assigneds.map((assigned:any) => {
               let user = allUsers.filter((user) => user.id == assigned.user_id)[0]
               return <p key={user.id} className={styles.assingn}> {user.email} {author && <TiDelete onClick={() => handleDeleteAssignation(assigned.id)} className={styles.deleteAssing} />}</p>
