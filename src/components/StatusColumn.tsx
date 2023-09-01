@@ -62,13 +62,23 @@ const StatusColumn = ({ title, status, setStatus }: StatusColumnProps) => {
   }
   
   const changeDraggedTaskStatus = () => {
-    let newTasks = tasks.map((task) => {
-      if (task.id === draggedTask?.id) {
-        task.status = title;
-      }
-      return task;
-    })
-    setTasks(newTasks);
+    if(author){
+        let newTasks = tasks.map((task) => {
+        if (task.id === draggedTask?.id) {
+          task.status = title;
+        }
+        return task;
+        })
+        setTasks(newTasks);
+    }else {
+      let newTasks = assignedTasks.map((task) => {
+        if (task.id === draggedTask?.id) {
+          task.status = title;
+        }
+        return task;
+        })
+        setAssignedTasks(newTasks)
+    }
 
   }
 

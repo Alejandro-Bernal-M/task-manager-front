@@ -17,6 +17,7 @@ type TaskProps = {
 
 const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) => {
   const { tasks,
+          assignedTasks,
           taskCounter,
           setTaskCounter,
           setDraggedTask,
@@ -115,8 +116,13 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
   }
 
   const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
-    let taskToDrag = tasks.filter(task => task.id === id);
-    setDraggedTask(taskToDrag[0]);
+    if(author){ 
+      let taskToDrag = tasks.filter(task => task.id === id);
+      setDraggedTask(taskToDrag[0]);
+    }else {
+      let taskToDrag = assignedTasks.filter(task => task.id === id);
+      setDraggedTask(taskToDrag[0]);
+    }
   }
 
   const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>): void => {
