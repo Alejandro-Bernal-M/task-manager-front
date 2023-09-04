@@ -74,8 +74,7 @@
   border-radius: 10px;
   padding: 10px;
   font-size: 1rem;
-  color: var(--color-1);
-  text-shadow: 1px 1px 1px var(--color-5);
+  color: var(--color-5);
 }
 
 .popupBody form select {
