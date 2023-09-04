@@ -10,9 +10,14 @@
 }
 
 .mainTitle {
-    font-size: 4rem;
+    font-size: 3.5rem;
     text-align: center;
+    display: flex;
+    justify-content: center;
     color: var(--color-1);
     padding-bottom: 2rem;
     text-shadow: 4px 3px 2px var(--color-5);
+    width: 70%;
+    overflow-wrap: break-word;
+    flex: 1;
 }
