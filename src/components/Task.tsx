@@ -186,6 +186,18 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
     }
   }
 
+  const handleTouch = (e:React.TouchEvent<SVGSVGElement>):void => {
+    console.log('touch');
+    console.log((e.target as SVGSVGElement).parentElement);
+    (e.target as SVGSVGElement).parentElement?.setAttribute('draggable', 'true');
+    e.stopPropagation();
+    setNode((e.target as SVGSVGElement).parentElement);
+  }
+
+  const handleTouchMove = ()=>{
+    console.log('moving')
+  } 
+
     return (
     <div className={styles.taskCard}
       id= {id}
@@ -193,10 +205,12 @@ const Task = ({title, description, status, id, authorId, assigneds}: TaskProps) 
       onDragStart={handleDragStart} 
       onDragEnd={handleDragEnd} 
       onDrag={handleDrag}
+      onTouchMove={handleTouchMove}
     >
       <PiDotsSixVerticalBold
         className={styles.dragIcon}
         onMouseDown={handleDragIconClick}
+        onTouchStart={handleTouch}
       />
       <h3>{title}</h3>
       <p>{description}</p>
