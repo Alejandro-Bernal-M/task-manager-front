@@ -178,8 +178,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   
   useEffect(() => {
 
-    const userId = localStorage.getItem('user_id') || '';
-    const urlGroups = api.groups(userId);
+    const urlGroups = api.groups(user.id);
     const fetchGroups = async () => {
       try{
         const response = await fetch(urlGroups, {
@@ -189,6 +188,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
             'Authorization': token
           }
         });
+        if (response.status == 401){
+          localStorage.removeItem('token')
+        }
         const data = await response.json();
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
@@ -211,6 +213,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         }
       });
       const data = await response.json();
+      if (response.status == 401){
+        localStorage.removeItem('token')
+      }
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
       }
@@ -223,7 +228,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
   const fetchInvitations = async () => {
     try {
-      const response = await fetch(api.invitations(userId), {
+      const response = await fetch(api.invitations(user.id), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
