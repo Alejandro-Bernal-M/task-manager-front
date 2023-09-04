@@ -3,10 +3,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: max(20%, 200px);
-  min-width: 250px;
+  width: min(300px, 80%);
   height: 100%;
-  flex: 1;
   border: 2px solid var(--color-1);
   border-radius: 10px;
   background-color: var(--color-5);

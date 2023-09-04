@@ -16,13 +16,13 @@
   min-height: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
 }
 
 .authorOrNotDiv {
-  width: 60%;
+  width: 80%;
   height: auto;
   display: flex;
   align-items: center;
@@ -33,7 +33,7 @@
 
 
 .authorOrNotDiv div {
-  width: 60%;
+  width: 100%;
   height: auto;
   display: flex;
   align-items: center;
@@ -44,7 +44,8 @@
 
 .authorOrNotDiv div button {
   width: 200px;
-  height: 40px;
+  height: auto;
+  min-height: 40px;
   border: 2px solid var(--color-1);
   border-radius: 10px;
   background-color: var(--color-5);
@@ -52,6 +53,7 @@
   text-shadow: 1px 1px 1px var(--color-5);
   font-size: 1rem;
   cursor: pointer;
+  padding: 5px;
 }
 
 .active {
@@ -88,4 +90,16 @@
   color: var(--color-1);
   text-shadow: 1px 1px 1px var(--color-5);
   cursor: pointer;
+}
+
+.select option {
+  width: 80%;
+  position: relative;
+  top: 0;
+  left: 0;
+
+}
+
+.select option:checked{
+  background-color: var(--color-5);
 }

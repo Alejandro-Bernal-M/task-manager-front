@@ -12,6 +12,7 @@
   text-shadow: 1px 1px 1px #000;
   font-size: 1.5rem;
   border-bottom: 1px solid var(--color-5);
+  z-index: 5000;
 }
 
 .navbar ul {
@@ -62,8 +63,8 @@
   align-items: center;
   justify-content: center;
   background-color: var(--color-5);
-  backdrop-filter: blur(10px);
   z-index: 9000;
+  box-shadow: 0 5px 5px 1px var(--color-1);
 }
 
 .mobileMenu ul {

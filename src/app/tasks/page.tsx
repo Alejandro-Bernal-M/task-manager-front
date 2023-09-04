@@ -115,7 +115,7 @@ const Tasks = () => {
     return (
         <div className={styles.container}>
           <div className={styles.authorOrNotDiv}>
-            <h3>See the task:</h3>
+            <h3>See the tasks:</h3>
             <div>
               <button className={author ? styles.active : ''} onClick={()=> setAuthor(true)}>Authored by you</button>
               <button className={!author ? styles.active : ''} onClick={()=> setAuthor(false)}>Assigned to you</button>

@@ -65,8 +65,8 @@
 }
 
 .assignDiv button {
-  height: 50px;
-  width: 40%;
+  height: 40px;
+  width: 60%;
 }
 
 .deleteAssing {
@@ -113,6 +113,8 @@
 
 .assignMenu button {
   width: 100%;
+  height: auto;
+  padding: 5px;
 }
 
 @keyframes grabbingAnimation {
