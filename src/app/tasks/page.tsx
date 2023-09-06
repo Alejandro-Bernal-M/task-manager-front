@@ -7,6 +7,8 @@ import { useStateContext } from '@/context/StateContext'
 import { useState, useEffect } from 'react'
 import api from '@/utils/common'
 import { usePathname } from 'next/navigation'
+import { Droppable, DragDropContext } from 'react-beautiful-dnd';
+import { toast } from 'react-hot-toast'
 
 const Tasks = () => {
   const { showPopup,
@@ -24,7 +26,9 @@ const Tasks = () => {
           setSubgroupUsers,
           userGroups,
           author,
-          setAuthor
+          setAuthor,
+          tasks,
+          assignedTasks
         } = useStateContext();
 
   const [status, setStatus] = useState('' as string);
@@ -45,6 +49,9 @@ const Tasks = () => {
             'Authorization': token
           }
         })
+        if(response.status == 401){
+          localStorage.removeItem('token')
+        }
         const data = await response.json()
         setTasks(data.authored)
         setAssignedTasks(data.assigned)
@@ -112,6 +119,61 @@ const Tasks = () => {
   
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
+
+  const handleDragUpdate = (start:any) => {
+    //console.log(start)
+    console.log(start.destination?.droppableId)
+    console.log('update')
+  }
+
+  const handleDragEnd = (start:any) => {
+  
+    if(author){
+        let newTasks = tasks.map((task) => {
+        if (task.id == start.draggableId) {
+          task.status = start.destination.droppableId;
+        }
+        return task;
+        })
+        setTasks(newTasks);
+    }else {
+      let newTasks = assignedTasks.map((task) => {
+        if (task.id == start.draggableId) {
+          task.status = start.destination.droppableId;
+        }
+        return task;
+        })
+        setAssignedTasks(newTasks)
+    }
+    const updateApiStatus = async() => {
+      const url = api.Task(user.id, start.draggableId);
+
+      try {
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify({
+            task: {
+              status: start.destination.droppableId
+            }
+          })
+        })
+
+        const data = await response.json();
+        if(data.errors) {
+          toast.error(data.errors)
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    updateApiStatus();
+    }
+  
     return (
         <div className={styles.container}>
           <div className={styles.authorOrNotDiv}>
@@ -155,11 +217,15 @@ const Tasks = () => {
           </div>
           }
           {showPopup && <TaskPopup status={status} setStatus={setStatus}/>}
+          <DragDropContext onDragEnd={handleDragEnd} onDragUpdate={handleDragUpdate}>
+
             <div className={styles.tasksContainer}>
               {statuses.map((title, index) => (
-                <StatusColumn key={index} title={title} status={status} setStatus={setStatus} />
-              ))}
+                        <StatusColumn key={index} id={index} title={title} status={status} setStatus={setStatus} />
+
+                ))}
             </div>
+            </DragDropContext>
         </div>
     )
 }
