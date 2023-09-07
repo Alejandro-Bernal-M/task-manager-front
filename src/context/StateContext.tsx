@@ -88,10 +88,11 @@ interface GroupWithSubgroups {
 }
 
 type UserGroup =  {
-  user_id: string;
+  subgroup: {user_id: string;
   subgroup_id: string;
   title: string;
-  id: string;
+  id: string;},
+  assignation_id: number
 }
 
 type GroupAndSubgroupsPopUp = {
