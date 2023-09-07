@@ -18,30 +18,14 @@ type TaskProps = {
 }
 
 const Task = ({title, description, status, id, authorId, assigneds, index}: TaskProps) => {
-  const { tasks,
-          assignedTasks,
+  const {
           taskCounter,
           setTaskCounter,
-          setDraggedTask,
-          mousePosition,
-          setMousePosition,
-          previousSiblingNode,
-          nextSiblingNode,
-          setPreviousSiblingNode,
-          setNextSiblingNode,
-          previousSiblingPosition,
-          nextSiblingPosition,
-          setPreviousSiblingPosition,
-          setNextSiblingPosition,
-          setIdToChange,
-          Node,
-          setNode,
           user,
           token,
           subgroupUsers,
           allUsers,
           author,
-          draggedTask
         } = useStateContext();
   const[showSubgroupUsers, setShowSubgroupUsers] = useState(false);
   const[assignedUser, setAssignedUser] = useState('');
@@ -69,77 +53,6 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
       console.log(error);
     }
   }
-
-  // useEffect(() => {
-  //   const handleSiblingsPositions = (mainNode: HTMLElement): void => {
-  //     setPreviousSiblingNode(mainNode.previousElementSibling as HTMLDivElement);
-  //     setNextSiblingNode(mainNode.nextElementSibling as HTMLDivElement);
-  //     if( previousSiblingNode){
-  //       setPreviousSiblingPosition(previousSiblingNode.getBoundingClientRect().top);
-  //     }
-  
-  //     if (nextSiblingNode) {
-  //       setNextSiblingPosition(nextSiblingNode.getBoundingClientRect().top);
-  //     }
-  //   }
-    
-  //   if (Node) {
-  //     handleSiblingsPositions(Node);
-  //   }
-  // }, [Node, mousePosition, previousSiblingNode, nextSiblingNode,setNextSiblingNode, setPreviousSiblingNode, setPreviousSiblingPosition, setNextSiblingPosition])
-
-
-
-  // const handleDrag = (ev: React.DragEvent<HTMLDivElement>): void => {
-  //   ev.preventDefault();
-  //   if (!previousSiblingNode && !nextSiblingNode){
-  //     setIdToChange(id);
-  //     return;
-  //   }
-
-  //   setMousePosition(ev.clientY);
-
-  //   if (previousSiblingPosition != undefined && mousePosition < previousSiblingPosition) {
-  //     if (previousSiblingNode) {
-  //       setIdToChange(previousSiblingNode.id);
-  //       const [prevNode, currentNode] = [Node, previousSiblingNode];
-  //       setPreviousSiblingNode(prevNode);
-  //       setNode(currentNode);
-
-  //     }}
-
-  //   if (nextSiblingPosition != undefined  && mousePosition > nextSiblingPosition) {
-  //     if (nextSiblingNode) {
-  //       setIdToChange(nextSiblingNode.id);
-  //       const [nextNode, currentNode] = [Node, nextSiblingNode];
-  //       setNextSiblingNode(nextNode);
-  //       setNode(currentNode);
-  //     }
-  //   } 
-  // }
-
-  const handleDragStart = (ev: React.DragEvent<HTMLDivElement>): void => {
-    console.log('start')
-    if(author){ 
-      let taskToDrag = tasks.filter(task => task.id === id);
-      setDraggedTask(taskToDrag[0]);
-      console.log('1')
-    }else {
-      let taskToDrag = assignedTasks.filter(task => task.id === id);
-      setDraggedTask(taskToDrag[0]);
-    }
-  }
-
-  // const handleDragEnd = (ev: React.DragEvent<HTMLDivElement>): void => {
-  //   // (ev.target as HTMLDivElement).setAttribute('draggable', 'false');
-  //   setDraggedTask(null);
-  // }
-  
-  // const handleClick = (ev: React.MouseEvent<HTMLDivElement>): void => {
-  //   // Prevent drag from the parent div when clicking on the dragIcon
-  //   ev.stopPropagation();
-  //   setNode((ev.target as HTMLElement));
-  // };
 
   const handleAssignedUser = (e:React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
@@ -189,61 +102,17 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
       console.log(error)
     }
   }
-
-
-  // const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-  //   e.stopPropagation();
-  //   setNode((e.target as HTMLElement));
-  //   console.log(Node)
-  //   if(author){ 
-  //     let taskToDrag = tasks.filter(task => task.id === id);
-  //     setDraggedTask(taskToDrag[0]);
-  //   }else {
-  //     let taskToDrag = assignedTasks.filter(task => task.id === id);
-  //     setDraggedTask(taskToDrag[0]);
-  //   }
-  //   if(Node) {
-  //     console.log()
-  //     let heigth = Node.clientHeight.toString()
-  //     let width = Node.clientWidth.toString()
-  //     Node.style.height = heigth+"px";
-  //     Node.style.width = width+"px";
-  //     Node.style.position = 'fixed'
-  //   }
-  // }
   
-  // const handleTouchMove = (e:React.TouchEvent) => {
-  //   if(Node) {
-  //      Node.style.left = (e.changedTouches[0].clientX - Node.clientWidth/2).toString()+"px";
-  //      Node.style.top = (e.changedTouches[0].clientY - Node.clientHeight/2).toString()+"px";
-  //   }
-  // }
-
-  // const handleTouchEnd = () => {
-  //   console.log('end')
-  //   if(Node){
-  //     Node.style.left = '';
-  //     Node.style.top = '';
-  //     Node.style.height = '';
-  //     Node.style.width = '';
-  //     Node.style.position = '';
-  //     // setNode(null)
-  //   }
-  // }
     return (
     <Draggable draggableId={id.toString()} index={index}>
       {(provided) =>(
 
-      <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={styles.taskCard}
+      <div
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}
+        className={styles.taskCard}
         id= {id}
-   
-        onDragStart={handleDragStart} 
-        // onDragEnd={handleDragEnd} 
-        // onDrag={handleDrag}
-        // onTouchStart={handleTouchStart}
-        // onMouseDown={handleClick}
-        // onTouchMove={handleTouchMove}
-        // onTouchEnd={handleTouchEnd}
         >
         
         <h3>{title}</h3>

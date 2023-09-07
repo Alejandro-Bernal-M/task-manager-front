@@ -4,6 +4,7 @@ import Task from './Task'
 import api from '@/utils/common'
 import { toast } from 'react-hot-toast'
 import { Droppable } from 'react-beautiful-dnd'
+import { useState, useEffect } from 'react'
 
 type StatusColumnProps = {
   title: string,
@@ -15,17 +16,8 @@ type StatusColumnProps = {
 const StatusColumn = ({ title, status,id, setStatus }: StatusColumnProps) => {
   const { setShowPopup,
           tasks,
-          setTasks,
           assignedTasks,
-          setAssignedTasks,
-          draggedTask,
-          setDraggedTask,
-          idToChange,
-          setIdToChange,
-          setNode,
           subgroupSelect,
-          token,
-          user,
           author
         } = useStateContext();
 
@@ -33,92 +25,6 @@ const StatusColumn = ({ title, status,id, setStatus }: StatusColumnProps) => {
     setStatus(title);
     setShowPopup(true);
   }
-
-
-  const swapTasksPositions =async () => {
-    if(idToChange === draggedTask?.id) return;
-    if (!draggedTask) return;
-    let newTasks = []
-    if (author){
-      newTasks = [...tasks];
-    }else {
-      newTasks = [...assignedTasks];
-    }
-    let draggedTaskIndex = newTasks.findIndex(task => task.id == draggedTask.id);
-    let taskToChangeIndex = newTasks.findIndex(task => task.id == idToChange);
-    if(draggedTaskIndex === -1 || taskToChangeIndex === -1) return;
-    const newFistOrder = newTasks[taskToChangeIndex].order;
-    const newSecondOrder = newTasks[draggedTaskIndex].order;
-    newTasks[taskToChangeIndex].order = newSecondOrder;
-    newTasks[draggedTaskIndex].order = newFistOrder;
-    swapTasksPositionsApi({task1: newTasks[draggedTaskIndex], task2: newTasks[taskToChangeIndex]});
-    if(author){
-      setTasks(newTasks.sort((a, b) => a.order - b.order));
-    }else {
-      setAssignedTasks(newTasks.sort((a, b) => a.order - b.order));
-    }
-    setIdToChange('')
-  }
-  
-  const swapTasksPositionsApi = async ({task1, task2} :{task1: TaskType, task2: TaskType}) => {
-    let url1= ''
-    let url2= ''
-    if(author){
-      url1 = api.Task(user.id, task1.id);
-      url2 = api.Task(user.id, task2.id);
-    }else {
-      url1 = api.Task(task1.author_id, task1.id);
-      url2 = api.Task(task2.author_id, task2.id);
-    }
-
-    try {
-      const response = await fetch(url1, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify({
-          task: {
-            order: task1.order
-          }
-        })
-      });
-      const data = await response.json();
-      if(data.errors) {
-        toast.error(data.errors)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      const response = await fetch(url2, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        },
-        body: JSON.stringify({
-          task: {
-            order: task2.order
-          }
-        })
-      });
-      const data = await response.json();
-
-    } catch (error) {
-      
-    }
-  }
-
-
-  const handleDragOver = (ev: React.DragEvent<HTMLDivElement>): void => {
-    ev.preventDefault();
-    console.log('1')
-    swapTasksPositions();
-  }
-  
-
 
 
   return (
@@ -133,13 +39,13 @@ const StatusColumn = ({ title, status,id, setStatus }: StatusColumnProps) => {
             {...provided.droppableProps}
             className={styles.tasksColumn}
             id={title}
-            onDragOver={handleDragOver}
           >
             { author && tasks?.length > 0 && tasks.map((task, index) => (
-              task.status == title && task.subgroup_id == subgroupSelect && <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds} index={index}/>
+              task.status == title  && <Task key={task.id} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds} index={index}/>
             ))}
-            { !author && assignedTasks?.length > 0 && assignedTasks.map((task, index) => (
-              task.status == title && task.subgroup_id == subgroupSelect &&  <Task key={index} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds} index={index}/>
+            { !author && assignedTasks?.length > 0 &&
+             assignedTasks.map((task, index) => (
+              task.status == title && task.subgroup_id == subgroupSelect &&  <Task key={task.id} title={task.title} description={task.description} status={task.status} id={task.id} authorId={task.author_id} assigneds={task.assigneds} index={index}/>
             ))}
             {provided.placeholder}
           </div>
