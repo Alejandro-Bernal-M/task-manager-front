@@ -1,14 +1,14 @@
 .popup {
-  position: absolute;
-  top: 80px;
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100%;
-  height: calc(100vh - 43px);
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
+  z-index: 4000;
 }
 
 .popupContent {
@@ -75,8 +75,7 @@
   border-radius: 10px;
   padding: 10px;
   font-size: 1rem;
-  color: var(--color-1);
-  text-shadow: 1px 1px 1px var(--color-5);
+  color: var(--color-5);
 }
 
 .popupBody form textarea {
@@ -90,7 +89,9 @@
 
 .popupBody form button {
   width: 50%;
-  height: 40px;
+  height: auto;
+  padding: 5px;
+  min-height: 40px;
   border: 2px solid var(--color-1);
   border-radius: 10px;
   background-color: var(--color-1);

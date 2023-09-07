@@ -1,6 +1,6 @@
 .group {
   border-radius: 10px;
-  width: 60%;
+  width: 70%;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -27,7 +27,9 @@
 .groupBtn {
   border-radius: 10px;
   width: 70%;
-  height: 30px;
+  padding: 5px;
+  height: auto;
+  min-height: 30px;
   cursor: pointer;
   background-color: var(--color-1);
   border: 2px solid var(--color-5);

@@ -7,6 +7,9 @@ import { useStateContext } from '@/context/StateContext'
 import { useState, useEffect } from 'react'
 import api from '@/utils/common'
 import { usePathname } from 'next/navigation'
+import { DragDropContext } from 'react-beautiful-dnd';
+import { TaskType } from '@/context/StateContext'
+import { toast } from 'react-hot-toast'
 
 const Tasks = () => {
   const { showPopup,
@@ -15,6 +18,7 @@ const Tasks = () => {
           subgroupSelect,
           setLoggedIn,
           taskCounter,
+          setTaskCounter,
           token,
           groups,
           filteredSubgroup,
@@ -24,7 +28,9 @@ const Tasks = () => {
           setSubgroupUsers,
           userGroups,
           author,
-          setAuthor
+          setAuthor,
+          tasks,
+          assignedTasks
         } = useStateContext();
 
   const [status, setStatus] = useState('' as string);
@@ -45,16 +51,21 @@ const Tasks = () => {
             'Authorization': token
           }
         })
+        if(response.status == 401){
+          localStorage.removeItem('token')
+        }
         const data = await response.json()
-        setTasks(data.authored)
-        setAssignedTasks(data.assigned)
+        setTasks(data.authored.filter((task:any) => task.subgroup_id == subgroupSelect))
+        setAssignedTasks(data.assigned.filter((task:any)  => task.subgroup_id == subgroupSelect))
       }
       catch(error) {
         console.log('hello error')
       }
     }
     fetchData()
-  },[taskCounter, pathname, setLoggedIn, setTasks, url, token, setAssignedTasks])
+  
+  
+  },[taskCounter, pathname, setLoggedIn, setTasks, url, token, setAssignedTasks, subgroupSelect])
 
 
   const handleGroupSelect = (e:React.ChangeEvent<HTMLSelectElement>) => {
@@ -112,10 +123,133 @@ const Tasks = () => {
   
 
   const statuses = ['To Do', 'In Progress','Under review', 'Done']
-    return (
-        <div className={styles.container}>
+
+
+  const handleDragEnd = (start:any) => {
+    if(!start.destination) return
+
+
+    const changeStatus= () => {
+      if(author){
+        let newTasks = tasks.map((task) => {
+        if (task.id == start.draggableId) {
+          task.status = start.destination.droppableId;
+        }
+        return task;
+        })
+        setTasks(newTasks);
+    }else {
+      let newTasks = assignedTasks.map((task) => {
+        if (task.id == start.draggableId) {
+          task.status = start.destination.droppableId;
+        }
+        return task;
+        })
+        setAssignedTasks(newTasks)
+    }
+    const updateApiStatus = async() => {
+      const url = api.Task(user.id, start.draggableId);
+  
+      try {
+        const response = await fetch(url, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify({
+            task: {
+              status: start.destination.droppableId
+            }
+          })
+        })
+  
+        const data = await response.json();
+        if(data.errors) {
+          toast.error(data.errors)
+        }
+  
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    updateApiStatus();
+    }
+
+    if(start.source.droppableId != start.destination.droppableId){
+      changeStatus();
+    }
+    
+    const updateOrder = async ({task} :{task: TaskType}) => {
+      let url1= ''
+      if(author){
+        url1 = api.Task(user.id, task.id);
+      }else {
+        url1 = api.Task(task.author_id, task.id);
+      }
+      
+      try {
+        const response = await fetch(url1, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+          },
+          body: JSON.stringify({
+            task: {
+              order: task.order
+            }
+          })
+        });
+        const data = await response.json();
+        if(data.errors) {
+          toast.error(data.errors)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setTaskCounter(taskCounter + 1)
+    }
+
+    const sourceIndex = start.source.index;
+    const destIndex = start.destination.index;
+    
+    // Create a copy of the tasks array
+    let newTasks= author? [...tasks] : [...assignedTasks]
+    
+    // Swap the order values of the tasks at source and destination indices
+    const sourceTask = newTasks[sourceIndex];
+    const destTask = newTasks[destIndex];
+    
+    // Sort the tasks based on their updated order values
+    newTasks.splice(sourceIndex, 1)
+    newTasks.splice(destIndex, 0, sourceTask)
+    
+    
+    let order = 0;
+    newTasks.map((task : TaskType) => {
+      if(task.order != order){
+        task.order = order;
+        order ++;
+        updateOrder({task: task});
+      }else {
+        order ++;
+      }
+  
+    })
+
+    if (author) {
+      setTasks(newTasks);
+    } else {
+      setAssignedTasks(newTasks);
+    }
+    
+  }
+  
+  return (
+    <div className={styles.container}>
           <div className={styles.authorOrNotDiv}>
-            <h3>See the task:</h3>
+            <h3>See the tasks:</h3>
             <div>
               <button className={author ? styles.active : ''} onClick={()=> setAuthor(true)}>Authored by you</button>
               <button className={!author ? styles.active : ''} onClick={()=> setAuthor(false)}>Assigned to you</button>
@@ -155,11 +289,15 @@ const Tasks = () => {
           </div>
           }
           {showPopup && <TaskPopup status={status} setStatus={setStatus}/>}
+          <DragDropContext onDragEnd={handleDragEnd} >
+
             <div className={styles.tasksContainer}>
               {statuses.map((title, index) => (
-                <StatusColumn key={index} title={title} status={status} setStatus={setStatus} />
-              ))}
+                        <StatusColumn key={index} id={index} title={title} status={status} setStatus={setStatus} />
+
+                ))}
             </div>
+            </DragDropContext>
         </div>
     )
 }

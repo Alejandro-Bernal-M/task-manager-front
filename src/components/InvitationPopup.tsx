@@ -5,7 +5,18 @@ import api from '@/utils/common';
 import { toast } from 'react-hot-toast';
 
 const InvitationPopup = () => {
-  const { setInvitationPopup, allUsers, groups, setGroupCount, groupCount,userInvitation, setUserInvitation, subgroupInvitation, setSubgroupInvitation } = useStateContext();
+  const { setInvitationPopup,
+          allUsers,
+          groups,
+          setGroupCount,
+          groupCount,
+          userInvitation,
+          setUserInvitation,
+          subgroupInvitation,
+          setSubgroupInvitation,
+          token,
+          user
+        } = useStateContext();
 
   const subgroups : any = []
   
@@ -23,36 +34,39 @@ const InvitationPopup = () => {
 
   const handleSend = async(e: React.MouseEvent) => {
     e.preventDefault();
-    const author_id = localStorage.getItem('user_id') || '';
-    const token = localStorage.getItem('token') || '';
+    if(userInvitation == '' || subgroupInvitation == ''){
+      toast.error('Please select all the information');
+      return;
+    }
     let dataToSend = {
       invitation: {
         user_id: userInvitation,
         subgroup_id: subgroupInvitation,
-        author_id: author_id ,
+        author_id: user.id ,
         status: 'Pending'
       }
     };
 
     try {
-      const response = await fetch(api.invitations(author_id), {
+      const response = await fetch(api.invitations(user.id), {
         method: 'POST',
         headers: {
           'Content-Type' : 'application/json',
-          'Authorization': JSON.parse(token)
+          'Authorization': token
         },
         body: JSON.stringify(dataToSend)
       })
       const data = await response.json();
 
-      if ( data.status == 'ERROR') toast.error('Invitation already exists')
-      if ( data.status == 'SUCCESS') toast.success('Invitation created')
+      if ( data.status == 'ERROR') toast.error(data.message)
+      if ( data.status == 'SUCCESS') toast.success(data.message)
       setInvitationPopup(false);
       setGroupCount(groupCount + 1)
     } catch (error) {
       console.log(error)
     }
-
+    setUserInvitation('');
+    setSubgroupInvitation('');
   }
   return (
     <div className={styles.invitationPopup}>
@@ -65,14 +79,17 @@ const InvitationPopup = () => {
           <form>
             <p>Select the user:</p>
             <select id='emailOption' name='email' onChange={handleEmailChange}>
-              <option>Select the email</option>
-              {allUsers.map((user:any) => (
-                <option key={user.id} value={user.id} >{user.email}</option>
-              ))}
+              <option value=''>Email</option>
+              {allUsers.map((userToMap:any) => {
+                if(userToMap.id != user.id){
+                  return <option key={userToMap.id} value={userToMap.id} >{userToMap.email}</option>
+                }
+              }
+              )}
             </select>
             <p>Select the Subgroup: </p>
             <select id='subgroupOption' name='subgroup' onChange={handleSubgroupChange}>
-            <option>Select the subgroup</option>
+            <option value=''>Subgroup</option>
               {subgroups.length > 0  ? subgroups.map((subgroup:any) => (
                 <option key={subgroup.id} value={subgroup.id} >{subgroup.title}</option>
               )) :<option >You don&apos;t have any subgroups yet</option>}

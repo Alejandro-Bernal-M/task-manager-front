@@ -25,22 +25,6 @@ type ContextType = {
   setToken: (token: string) => void;
   showPopup: boolean;
   setShowPopup: (showPopup: boolean) => void;
-  draggedTask: TaskType | null;
-  setDraggedTask: (draggedTask: TaskType | null) => void;
-  mousePosition: number;
-  setMousePosition: (mousePosition: number) => void;
-  previousSiblingNode: HTMLElement | null;
-  setPreviousSiblingNode: (previousSiblingNode: HTMLElement | null) => void;
-  nextSiblingNode: HTMLElement | null;
-  setNextSiblingNode: (nextSiblingNode: HTMLElement | null) => void;
-  previousSiblingPosition: number | undefined;
-  setPreviousSiblingPosition: (previousSiblingPosition: number | undefined) => void;
-  nextSiblingPosition: number | undefined;
-  setNextSiblingPosition: (nextSiblingPosition: number | undefined) => void;
-  idToChange: string;
-  setIdToChange: (idToChange: string) => void;
-  Node: HTMLElement | null;
-  setNode: (Node: HTMLElement | null) => void;
   taskCounter: number;
   setTaskCounter: (taskCounter: number) => void;
   groups: GroupWithSubgroups[];
@@ -131,14 +115,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [token, setToken] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [draggedTask, setDraggedTask] = useState<TaskType | null>(null);
-  const [mousePosition, setMousePosition] = useState<number>(0);
-  const [previousSiblingNode, setPreviousSiblingNode] = useState<HTMLElement | null>(null);
-  const [nextSiblingNode, setNextSiblingNode] = useState<HTMLElement | null>(null);
-  const [previousSiblingPosition, setPreviousSiblingPosition] = useState<number | undefined>(0);
-  const [nextSiblingPosition, setNextSiblingPosition] = useState<number | undefined>(0);
-  const [idToChange, setIdToChange] = useState<string>('');
-  const [Node, setNode] = useState<HTMLElement | null>(null);
   const [taskCounter, setTaskCounter] = useState<number>(0);
   const [groups, setGroups] = useState<GroupWithSubgroups[]>([]);
   const [groupCount, setGroupCount] = useState(0);
@@ -178,8 +154,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   
   useEffect(() => {
 
-    const userId = localStorage.getItem('user_id') || '';
-    const urlGroups = api.groups(userId);
+    const urlGroups = api.groups(user.id);
     const fetchGroups = async () => {
       try{
         const response = await fetch(urlGroups, {
@@ -189,6 +164,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
             'Authorization': token
           }
         });
+        if (response.status == 401){
+          localStorage.removeItem('token')
+        }
         const data = await response.json();
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
@@ -211,6 +189,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         }
       });
       const data = await response.json();
+      if (response.status == 401){
+        localStorage.removeItem('token')
+      }
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
       }
@@ -223,7 +204,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
   const fetchInvitations = async () => {
     try {
-      const response = await fetch(api.invitations(userId), {
+      const response = await fetch(api.invitations(user.id), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -312,22 +293,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setToken,
         showPopup,
         setShowPopup,
-        draggedTask,
-        setDraggedTask,
-        mousePosition,
-        setMousePosition,
-        previousSiblingNode,
-        setPreviousSiblingNode,
-        nextSiblingNode,
-        setNextSiblingNode,
-        previousSiblingPosition,
-        setPreviousSiblingPosition,
-        nextSiblingPosition,
-        setNextSiblingPosition,
-        idToChange,
-        setIdToChange,
-        Node,
-        setNode,
         taskCounter,
         setTaskCounter,
         groups,
