@@ -81,7 +81,6 @@ export default function Registration() {
             setToken(data.token)
             toast.success('Logged in successfully');
             localStorage.setItem('token',JSON.stringify(data.token));
-            localStorage.setItem('user_id',JSON.stringify(data.user_id));
             router.push('/tasks');
           }
         } catch (error) {

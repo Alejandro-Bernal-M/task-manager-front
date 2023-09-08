@@ -12,6 +12,32 @@
   background-color: var(--color-2);
 }
 
+.editIcon{
+  align-self: flex-end;
+  color: var(--color-5);
+  cursor: pointer;
+}
+
+.editTitle,
+.editDescription {
+  width: 100%;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--color-5);
+}
+
+.editTitle {
+  font-size: 1rem;
+  height: 40px;
+  font-weight: bold;
+}
+
+.editDescription {
+  font-size: 0.8rem;
+  height: 50px;
+}
+
 .title {
   text-transform: uppercase;
   text-align: center;

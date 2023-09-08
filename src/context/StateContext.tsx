@@ -158,7 +158,12 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         }
       }
     } if(token == '' && loggedIn){
+      console.log('here 2')
+        if (pathname !== '/registration' && pathname !== '/') {
 
+          router.push('/');
+          toast.error('Your session has expired, please login again');
+        }
     }
   }, [loggedIn, pathname, router]);
   
