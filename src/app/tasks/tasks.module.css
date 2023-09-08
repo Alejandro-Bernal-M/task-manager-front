@@ -97,7 +97,7 @@
   position: relative;
   top: 0;
   left: 0;
-
+  color: var(--color-5)
 }
 
 .select option:checked{

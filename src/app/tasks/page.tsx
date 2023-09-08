@@ -62,7 +62,9 @@ const Tasks = () => {
         console.log('hello error')
       }
     }
-    fetchData()
+    if(token != ''){
+      fetchData()
+    }
   
   
   },[taskCounter, pathname, setLoggedIn, setTasks, url, token, setAssignedTasks, subgroupSelect])
@@ -85,8 +87,8 @@ const Tasks = () => {
       setAssignedSubgroup('No subgroup selected')
       return
     }
-    let subgroup = userGroups.filter(sub => sub.id == e.target.value)
-    setAssignedSubgroup(subgroup[0].title)
+    let subgroup = userGroups.filter(sub => sub.subgroup.id == e.target.value)
+    setAssignedSubgroup(subgroup[0].subgroup.title)
   }
 
   useEffect(()=>{
@@ -104,7 +106,7 @@ const Tasks = () => {
   useEffect(() => {
     const fetSubgroup = async() => {
       try {
-        if (groupSelect=='' || subgroupSelect == '') return
+        if (groupSelect=='' || subgroupSelect == '' || subgroupSelect == '0') return
         const response = await fetch(api.specificSubgroup(user.id, groupSelect, subgroupSelect), {
           method: 'GET',
           headers: {
@@ -207,6 +209,7 @@ const Tasks = () => {
         }
       } catch (error) {
         console.log(error);
+        return
       }
       setTaskCounter(taskCounter + 1)
     }
@@ -219,7 +222,6 @@ const Tasks = () => {
     
     // Swap the order values of the tasks at source and destination indices
     const sourceTask = newTasks[sourceIndex];
-    const destTask = newTasks[destIndex];
     
     // Sort the tasks based on their updated order values
     newTasks.splice(sourceIndex, 1)
@@ -260,7 +262,7 @@ const Tasks = () => {
               <h2>You are seeing the tasks assigned to you for the subgroup: {assignedSubgroup}</h2>
               <select className={styles.select} onChange={handleAssignedSubgroupSelect}>
                 <option value='' >Select the subgroup</option>
-                {userGroups.map(subgroup => <option key={subgroup.id} value={subgroup.id}>{subgroup.title}</option>)}
+                {userGroups.map(subgroup => <option key={subgroup.subgroup.id} value={subgroup.subgroup.id}>{subgroup.subgroup.title}</option>)}
               </select>
             </div>
 

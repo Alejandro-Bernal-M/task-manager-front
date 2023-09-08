@@ -1,10 +1,11 @@
 import { useStateContext } from '@/context/StateContext';
 import styles from './task.module.css'
-import { PiDotsSixVerticalBold } from 'react-icons/pi';
+import { AiFillEdit } from 'react-icons/ai';
 import React, { useEffect, useState } from 'react';
 import api from '@/utils/common';
 import { toast } from 'react-hot-toast';
 import {TiDelete} from 'react-icons/ti'
+import {RiSave3Fill} from 'react-icons/ri'
 import { Draggable } from 'react-beautiful-dnd';
 
 type TaskProps = {
@@ -21,6 +22,8 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
   const {
           taskCounter,
           setTaskCounter,
+          tasks,
+          setTasks,
           user,
           token,
           subgroupUsers,
@@ -29,6 +32,9 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
         } = useStateContext();
   const[showSubgroupUsers, setShowSubgroupUsers] = useState(false);
   const[assignedUser, setAssignedUser] = useState('');
+  const[edit, setEdit] = useState(false);
+  const[newTitle, setNewTitle] = useState(title);
+  const[newDescription, setNewDescription] = useState(description);
 
   const handleDeleteTasks = async() => {
     
@@ -103,6 +109,45 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
     }
   }
   
+  const handleEdit = async() => {
+
+    if(newTitle == '' || newDescription == ''){
+      toast.error('Please fill all the fields')
+      return
+    }
+    const body = {
+      task: {
+        title: newTitle,
+        description: newDescription
+      }
+    }
+    try {
+      const response = await fetch(api.Task(user.id, id), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await response.json();
+
+      const task = await data;
+      const newTasks = [...tasks]
+      newTasks[task.order] = task;
+      setTasks(newTasks);
+      if (response.status == 200){
+        toast.success('Task updated')
+      }
+      if (response.status == 401 ){
+        localStorage.removeItem('token')
+      }
+    } catch (error) {
+      return
+    }
+    setEdit(!edit)
+
+  }
     return (
     <Draggable draggableId={id.toString()} index={index}>
       {(provided) =>(
@@ -114,9 +159,36 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
         className={styles.taskCard}
         id= {id}
         >
-        
-        <h3>{title}</h3>
-        <p>{description}</p>
+        {author && !edit &&
+          <AiFillEdit className={styles.editIcon} onClick={() => {setEdit(!edit)}} />
+        }
+        {author && edit &&
+          <RiSave3Fill className={styles.editIcon}
+            onClick={handleEdit}
+          />
+        }
+        {!edit && <h3>{title}</h3>}
+        {!edit && <p>{description}</p>}
+        {edit &&
+          <input
+            defaultValue={title}
+            className={styles.editTitle}
+            onChange={(e) => {
+              e.preventDefault();
+              setNewTitle(e.target.value)
+            }} 
+          />
+        }
+        {edit &&
+          <textarea
+            defaultValue={description}
+              className={styles.editDescription}
+              onChange={(e) => {
+                e.preventDefault();
+                setNewDescription(e.target.value)
+              }} 
+          />
+        }
         <button onClick={handleDeleteTasks}>Delete</button>
         <div className={styles.assignDiv}>
           {authorId == user.id && <button onClick={() => setShowSubgroupUsers(!showSubgroupUsers)}>Assign menu</button>}

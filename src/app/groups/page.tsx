@@ -13,7 +13,7 @@ const Groups = () => {
           userGroups,
           setGroupAndSubgroupsPopUp,
           groupPopup,
-          setGroupPopup
+          setGroupPopup,
         } = useStateContext();
 
 
@@ -47,7 +47,7 @@ const Groups = () => {
             <hr />
             <div className={styles.subGroupHolder}>
               {userGroups.map((group, index) => (
-                <Subgroup key={index} title={group.title} groupId={'0'} id={0} subGroupColumn={false} />
+                <Subgroup key={index} title={group.subgroup.title} groupId={'0'} id={0} subGroupColumn={false} assignationId={group.assignation_id} />
                 ))}
             </div>
           </div>
