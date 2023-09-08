@@ -9,9 +9,15 @@
   border-radius: 10px;
   padding: 5px;
   height: auto;
-  gap: 10px;
   background-color: var(--color-2);
   min-height: 60px;
+}
+
+.subgroup h4 {
+  margin-bottom: 10px;
+}
+.subgroup p {
+  margin-bottom: 20px;
 }
 
 .subGroupBtn,
@@ -24,4 +30,31 @@
   cursor: pointer;
   background-color: var(--color-1);
   border: 2px solid var(--color-5);
+}
+
+.editIcon{
+  align-self: flex-end;
+  color: var(--color-5);
+  cursor: pointer;
+  top: 20px;
+}
+
+.editTitle,
+.editDescription {
+  width: 100%;
+  border: 2px solid var(--color-1);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--color-5);
+}
+
+.editTitle {
+  font-size: 1rem;
+  height: 40px;
+  font-weight: bold;
+}
+
+.editDescription {
+  font-size: 0.8rem;
+  height: 50px;
 }

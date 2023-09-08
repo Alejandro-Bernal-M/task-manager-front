@@ -80,6 +80,7 @@ type GroupType = {
 export interface Subgroups {
   id: number;
   title: string;
+  description: string;
 }
 
 interface GroupWithSubgroups {
@@ -93,6 +94,7 @@ type UserGroup =  {
     subgroup_id: string;
     title: string;
     id: string;
+    description: string;
   },
   assignation_id: number
 }

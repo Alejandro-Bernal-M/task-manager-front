@@ -133,7 +133,7 @@ const Group = ({title, description, id, subGroups}:{title:string, description:st
             <h4>Subgroups</h4>
             {subGroups.length == 0 && <p>No Subgroups</p>}
             {subGroups.map((subgroup) => (
-              <Subgroup key={subgroup.id} id={subgroup.id} title={subgroup.title} groupId={id}  subGroupColumn={true} assignationId={0} />
+              <Subgroup key={subgroup.id} id={subgroup.id} title={subgroup.title} description={subgroup.description} groupId={id}  subGroupColumn={true} assignationId={0} />
             ))}
           </div>
       </div>
