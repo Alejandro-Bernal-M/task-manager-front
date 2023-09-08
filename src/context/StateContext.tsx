@@ -88,10 +88,12 @@ interface GroupWithSubgroups {
 }
 
 type UserGroup =  {
-  subgroup: {user_id: string;
-  subgroup_id: string;
-  title: string;
-  id: string;},
+  subgroup:{
+    user_id: string;
+    subgroup_id: string;
+    title: string;
+    id: string;
+  },
   assignation_id: number
 }
 
@@ -140,6 +142,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       setLoggedIn(true);
     }else {
       setLoggedIn(false);
+      setToken('')
     }
   }, [loggedIn, token, pathname]);
   
@@ -167,6 +170,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         });
         if (response.status == 401){
           localStorage.removeItem('token')
+          setLoggedIn(false)
+          toast.error('Your session has expired, please log in again')
+          return
         }
         const data = await response.json();
         if(data.status === 'SUCCESS'){
@@ -177,8 +183,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       console.log(error);
     }
   }
-  fetchGroups();
-
+  
   const fetchUserGroups = async () => {
     const urlUserGroups = api.userGroups(user.id);
     try {
@@ -191,7 +196,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       });
       const data = await response.json();
       if (response.status == 401){
-        localStorage.removeItem('token')
+        return
       }
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
@@ -200,9 +205,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
       console.log(error);
     }
   }
-
-  fetchUserGroups();
-
+  
+  
   const fetchInvitations = async () => {
     try {
       const response = await fetch(api.invitations(user.id), {
@@ -213,20 +217,25 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         }
       })
       const data = await response.json();
-
+      
       if(data.status === 'SUCCESS'){
         setInvitations(data.data);
       }
-
+      
       if (response.status == 401){
         localStorage.removeItem('token')
-        //setLoggedIn(false)
+        return
       }
     } catch (error) {
       console.log(error)
     }
   }
-  fetchInvitations();
+  if(token != ''){
+    fetchUserGroups();
+    fetchGroups();
+    fetchInvitations();
+  }
+
   }, [groupCount, token, user])
 
   useEffect(()=> {
@@ -249,12 +258,14 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         console.log(error)
       }
     }
-    fetchAllUsers();
+    if(token != ''){
+      fetchAllUsers();
+    }
 
   },[setAllUsers, token])
 
   useEffect(() => {
-    const userId = localStorage.getItem('user_id') || '';
+    const userId = user.id;
     const urlUser = api.user(userId);
       const fetchUser = async () => {
         try{
@@ -275,7 +286,9 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
           console.log(error)
         }
       }
-      fetchUser();
+      if(token != ''){
+        fetchUser();
+      }
       
     }, [ token]);
 

@@ -87,6 +87,10 @@
   cursor: pointer;
 }
 
+.popupBody form select option {
+  color: var(--color-5)
+}
+
 .popupBody form button {
   width: 50%;
   height: 40px;
