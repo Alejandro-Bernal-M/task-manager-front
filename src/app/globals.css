@@ -7,7 +7,14 @@
   --color-4: #2cff97;
   --color-5: #313131;
   --font: 'Roboto Mono', monospace;
+  /* --color-1: #0c0edf;
+  --color-2: #0c77df;
+  --color-3: #730cdf;
+  --color-4: #2cff97;
+  --color-5: #313131;
+  --font: 'Roboto Mono', monospace; */
 }
+
 
 * {
   box-sizing: border-box;
@@ -20,6 +27,7 @@ body,
 html {
   height: auto;
   min-height: 100%;
+  /* background-image: url('../assets/images/stacked-steps-haikei.svg'); */
 }
 
 h1,

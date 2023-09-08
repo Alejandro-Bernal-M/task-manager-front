@@ -147,15 +147,18 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   }, [loggedIn, token, pathname]);
   
   useEffect(() => {
+
     if(token != ''){
       if (!loggedIn) {
+        console.log('here')
         if (pathname !== '/registration' && pathname !== '/') {
 
           router.push('/');
           toast.error('Your session has expired, please login again');
-          console.log('here')
         }
       }
+    } if(token == '' && loggedIn){
+
     }
   }, [loggedIn, pathname, router]);
   
