@@ -1,11 +1,11 @@
 import { useStateContext } from '@/context/StateContext';
 import styles from './task.module.css'
-import { AiFillEdit } from 'react-icons/ai';
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import api from '@/utils/common';
 import { toast } from 'react-hot-toast';
 import {TiDelete} from 'react-icons/ti'
 import {RiSave3Fill} from 'react-icons/ri'
+import { AiFillEdit } from 'react-icons/ai';
 import { Draggable } from 'react-beautiful-dnd';
 
 type TaskProps = {
@@ -160,7 +160,11 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
         id= {id}
         >
         {author && !edit &&
-          <AiFillEdit className={styles.editIcon} onClick={() => {setEdit(!edit)}} />
+          <AiFillEdit className={styles.editIcon} onClick={() => {
+            setEdit(!edit)
+            setNewTitle(title)
+            setNewDescription(description)
+          }} />
         }
         {author && edit &&
           <RiSave3Fill className={styles.editIcon}

@@ -99,7 +99,3 @@
   left: 0;
   color: var(--color-5)
 }
-
-.select option:checked{
-  background-color: var(--color-5);
-}

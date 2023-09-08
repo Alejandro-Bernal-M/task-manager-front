@@ -80,6 +80,7 @@ type GroupType = {
 export interface Subgroups {
   id: number;
   title: string;
+  description: string;
 }
 
 interface GroupWithSubgroups {
@@ -93,6 +94,7 @@ type UserGroup =  {
     subgroup_id: string;
     title: string;
     id: string;
+    description: string;
   },
   assignation_id: number
 }
@@ -147,15 +149,23 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
   }, [loggedIn, token, pathname]);
   
   useEffect(() => {
+
     if(token != ''){
       if (!loggedIn) {
+        console.log('here')
         if (pathname !== '/registration' && pathname !== '/') {
 
           router.push('/');
           toast.error('Your session has expired, please login again');
-          console.log('here')
         }
       }
+    } if(token == '' && loggedIn){
+      console.log('here 2')
+        if (pathname !== '/registration' && pathname !== '/') {
+
+          router.push('/');
+          toast.error('Your session has expired, please login again');
+        }
     }
   }, [loggedIn, pathname, router]);
   
