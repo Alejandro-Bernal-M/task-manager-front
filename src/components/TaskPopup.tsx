@@ -10,7 +10,7 @@ type TaskPopupProps = {
 }
 
 const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
-  const { setShowPopup,loggedIn, setLoggedIn, taskCounter, setTaskCounter, filteredSubgroup, subgroupSelect  } = useStateContext();
+  const { setShowPopup,loggedIn, setLoggedIn, taskCounter, setTaskCounter, filteredSubgroup, subgroupSelect, user  } = useStateContext();
 
   const handleCreateTask = async(e:React.MouseEvent) => {
     e.preventDefault();
@@ -30,14 +30,14 @@ const TaskPopup = ({status, setStatus}: TaskPopupProps) => {
         title: title,
         description: description,
         status: status,
-        author_id: localStorage.getItem('user_id') || '',
+        author_id: user.id,
         order: 0,
         subgroup_id: subgroupSelect
       }
     }
 
     const token = JSON.parse(localStorage.getItem('token') || '');
-    const url = api.Tasks(localStorage.getItem('user_id') || '');
+    const url = api.Tasks(user.id);
     try {
       const response = await fetch(url, {
         method: 'POST',

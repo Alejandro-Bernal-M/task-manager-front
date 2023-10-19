@@ -24,7 +24,7 @@ useEffect(() => {
 
   const handleEdit = () => {
     const token = JSON.parse(localStorage.getItem('token') || '');
-    const userId = localStorage.getItem('user_id') || '';
+    const userId = user.id;
     const url = api.user(userId);
     if(password !== confirm){
       toast.error('Passwords do not match');

@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast'
 import { useStateContext } from '@/context/StateContext'
 
 const GroupsPopup = () => {
-  const { setLoggedIn, groupCount, setGroupCount, groupAndSubgroupsPopUp, setGroupPopup, groupId } = useStateContext()
+  const { setLoggedIn, groupCount, setGroupCount, groupAndSubgroupsPopUp, setGroupPopup, groupId, user } = useStateContext()
 
   const handleClose = () => {
     setGroupPopup(false)
@@ -29,7 +29,7 @@ const GroupsPopup = () => {
       toast.error(`${groupOrSubgroup} description must be between 3 and 500 characters`)
       return
     }
-    const author_id = JSON.parse(localStorage.getItem('user_id') || '')
+    const author_id = user.id;
     const groupData = {
       title: groupName,
       description: groupDescription,
@@ -38,7 +38,7 @@ const GroupsPopup = () => {
     const token = JSON.parse(localStorage.getItem('token') || '')
     
     if(groupOrSubgroup == 'Group') {
-    const url = api.groups(localStorage.getItem('user_id') || '')
+    const url = api.groups(user.id)
 
     try {
       const response = await fetch(url, {

@@ -5,11 +5,9 @@ import { useStateContext } from '@/context/StateContext'
 
 
 const Invitation = ({send, subgroup, subgroupId, name, email, status, id}: {send: boolean, subgroup:string, subgroupId:string, name: string, email:string, status:string, id:string}) => {
-    const {setGroupCount, groupCount, setLoggedIn, token, userInvitation, subgroupInvitation} = useStateContext();
-    const userId = localStorage.getItem('user_id') || '';
-    const urlSpecificInvitation = api.specificInvitation(userId, id);
+    const {setGroupCount, groupCount, setLoggedIn, token, userInvitation, subgroupInvitation, user} = useStateContext();
+    const urlSpecificInvitation = api.specificInvitation(user.id, id);
     const handleCancel = async() => {
-
         try {
             const response = await fetch(urlSpecificInvitation, {
                 method: 'DELETE',
@@ -62,7 +60,7 @@ const Invitation = ({send, subgroup, subgroupId, name, email, status, id}: {send
 
     const handleAccept = async() => {
         try {
-            const response = await fetch(api.userGroups(userId), {
+            const response = await fetch(api.userGroups(user.id), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +68,7 @@ const Invitation = ({send, subgroup, subgroupId, name, email, status, id}: {send
                 },
                 body: JSON.stringify({
                     usergroup: {
-                        user_id: userId,
+                        user_id: user.id,
                         subgroup_id : subgroupId
                     }
                 })

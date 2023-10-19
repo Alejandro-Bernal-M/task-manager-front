@@ -38,7 +38,7 @@ const Task = ({title, description, status, id, authorId, assigneds, index}: Task
 
   const handleDeleteTasks = async() => {
     
-    const userId = localStorage.getItem('user_id') || '';
+    const userId = user.id
     const url = api.Task(userId, id);
 
     try {
