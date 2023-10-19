@@ -139,18 +139,22 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
 
   useEffect(() => {
     const getToken = localStorage.getItem('token');
+    const getUser = localStorage.getItem('user');
+    if(getUser){
+      setUser(JSON.parse(getUser));
+    }
     if (getToken) {
       setToken(JSON.parse(getToken));
       setLoggedIn(true);
     }else {
       setLoggedIn(false);
-      setToken('')
+      setToken(' ')
     }
   }, [loggedIn, token, pathname]);
   
   useEffect(() => {
 
-    if(token != ''){
+    if(token != ' '){
       if (!loggedIn) {
         console.log('here')
         if (pathname !== '/registration' && pathname !== '/') {
@@ -159,15 +163,8 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
           toast.error('Your session has expired, please login again');
         }
       }
-    } if(token == '' && loggedIn){
-      console.log('here 2')
-        if (pathname !== '/registration' && pathname !== '/') {
-
-          router.push('/');
-          toast.error('Your session has expired, please login again');
-        }
     }
-  }, [loggedIn, pathname, router]);
+  }, [loggedIn, pathname, router, token]);
   
   useEffect(() => {
 
@@ -181,12 +178,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
             'Authorization': token
           }
         });
-        if (response.status == 401){
-          localStorage.removeItem('token')
-          setLoggedIn(false)
-          toast.error('Your session has expired, please log in again')
-          return
-        }
         const data = await response.json();
         if(data.status === 'SUCCESS'){
           setGroups(data.data);
@@ -208,9 +199,6 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         }
       });
       const data = await response.json();
-      if (response.status == 401){
-        return
-      }
       if(data.status === 'SUCCESS'){
         setUserGroups(data.data);
       }
@@ -235,21 +223,19 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         setInvitations(data.data);
       }
       
-      if (response.status == 401){
-        localStorage.removeItem('token')
-        return
-      }
     } catch (error) {
       console.log(error)
     }
   }
-  if(token != ''){
+  if(token != '' && loggedIn){
+    setTimeout(() => {
     fetchUserGroups();
     fetchGroups();
     fetchInvitations();
+    }, 1000);
   }
 
-  }, [groupCount, token, user])
+  }, [groupCount, token, user, loggedIn])
 
   useEffect(()=> {
     const fetchAllUsers = async () => {
@@ -271,7 +257,7 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
         console.log(error)
       }
     }
-    if(token != ''){
+    if(token != ' '){
       fetchAllUsers();
     }
 
@@ -299,11 +285,11 @@ export const StateContext = ({ children }: { children: ReactNode }  ) => {
           console.log(error)
         }
       }
-      if(token != ''){
+      if(token != '' && loggedIn){
         fetchUser();
       }
       
-    }, [ token]);
+    }, [ token, user.id, loggedIn]);
 
   return (
     <context.Provider

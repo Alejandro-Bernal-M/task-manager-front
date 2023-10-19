@@ -10,7 +10,7 @@ import { useWindowDimentions } from '@/utils/useWindowDimentionsHook'
 import { useState } from 'react'
 
 const Navigation = () => {
-const { loggedIn } = useStateContext();
+const { loggedIn, setToken } = useStateContext();
 const { width } = useWindowDimentions();
 const [isOpen, setOpen] = useState(false)
 const pathname = usePathname();
@@ -18,6 +18,8 @@ const route = useRouter()
 const handleSignOut = () => {
   route.push('/');
   localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  setToken('');
   toast.success('Logged out successfully');
 };
 

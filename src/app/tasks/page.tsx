@@ -51,9 +51,6 @@ const Tasks = () => {
             'Authorization': token
           }
         })
-        if(response.status == 401){
-          localStorage.removeItem('token')
-        }
         const data = await response.json()
         setTasks(data.authored.filter((task:any) => task.subgroup_id == subgroupSelect))
         setAssignedTasks(data.assigned.filter((task:any)  => task.subgroup_id == subgroupSelect))
@@ -62,7 +59,7 @@ const Tasks = () => {
         console.log('hello error')
       }
     }
-    if(token != ''){
+    if(token != ' '){
       fetchData()
     }
   
