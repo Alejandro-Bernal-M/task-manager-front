@@ -68,9 +68,8 @@
 
 ## 🚀 Live Demo <a name="live-demo">
 
-[Video presentation on loom](pending)
+[Video presentation](https://drive.google.com/file/d/19J0cQQHUXHIvXAquVEFM32f6kA-URRFd/view?usp=share_link)
 
-[Live demo on render]()
 
 <!-- GETTING STARTED -->
 
